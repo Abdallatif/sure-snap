@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="96" ry="96" fill="#22CCEE"/>
-  <rect x="16" y="16" width="480" height="480" rx="80" ry="80" fill="none" stroke="#1BA8C4" stroke-width="8" opacity="0.3"/>
-  <!-- Lightning-dollar unified symbol -->
-  <g fill="#fff">
-    <!-- Top dollar curve (S-curve top half) -->
-    <path d="M296 128c0 0-36-24-80-8s-52 56-32 80c16 19 44 28 64 36" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Bottom dollar curve (S-curve bottom half) -->
-    <path d="M216 384c0 0 36 24 80 8s52-56 32-80c-16-19-44-28-64-36" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Lightning bolt as vertical stroke -->
-    <polygon points="280,72 232,232 288,232 224,440 232,440 296,248 240,248 296,72" fill="#fff"/>
+  <!-- Viewfinder corners -->
+  <g fill="none" stroke="#fff" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M96 192 L96 132 Q96 96 132 96 L192 96"/>
+    <path d="M320 96 L380 96 Q416 96 416 132 L416 192"/>
+    <path d="M416 320 L416 380 Q416 416 380 416 L320 416"/>
+    <path d="M192 416 L132 416 Q96 416 96 380 L96 320"/>
+  </g>
+  <!-- Dollar sign: clean S-curve + vertical bar -->
+  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 188 C292 164 268 152 244 160 C216 170 208 196 232 218 C256 240 284 252 288 280 C294 316 268 340 240 340 C216 340 200 324 196 304" stroke-width="30"/>
+    <line x1="256" y1="140" x2="256" y2="370" stroke-width="24"/>
   </g>
 </svg>
