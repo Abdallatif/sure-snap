@@ -17,8 +17,8 @@
   "settings.showToken": "Show",
   "settings.hideToken": "Hide",
   "settings.testConnection": "Test Connection",
-  "settings.connectionSuccess": "Connected successfully",
-  "settings.connectionFailed": "Connection failed",
+  "settings.connectionSuccess": "Success",
+  "settings.connectionFailed": "Failed",
   "settings.accounts": "Accounts",
   "settings.language": "Language",
 

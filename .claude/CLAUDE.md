@@ -34,3 +34,16 @@ yarn tsc --noEmit     # Type-check (no npx — typescript is a devDependency)
 - Prioritize speed to entry over features
 - All user-facing strings use i18n
 - Match Sure's category/tag structure for seamless sync
+
+## RTL Support
+
+This app supports English (LTR) and Arabic (RTL). The `SettingsContext` sets `dir` and `lang` on `<html>` when the language changes.
+
+When working with shadcn/ui components, use **logical CSS properties** instead of physical ones so they flip automatically in RTL:
+- Positioning: `end-0` / `start-0` instead of `right-0` / `left-0`
+- Borders: `border-s` / `border-e` instead of `border-l` / `border-r`
+- Spacing: `ms-*` / `me-*` / `ps-*` / `pe-*` instead of `ml-*` / `mr-*` / `pl-*` / `pr-*`
+- Text: `text-start` / `text-end` instead of `text-left` / `text-right`
+- For directional animations (e.g. slide), use `ltr:` and `rtl:` variant prefixes to flip direction
+
+Reference: [shadcn RTL docs](https://ui.shadcn.com/docs/rtl)

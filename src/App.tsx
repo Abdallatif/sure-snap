@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Header } from './components/Header'
 import { SetupBanner } from './components/SetupBanner'
+import { SettingsSheet } from './components/SettingsSheet'
 import {
   Sheet,
   SheetContent,
@@ -32,7 +33,7 @@ function App() {
           <SheetHeader>
             <SheetTitle>{t('settings.title')}</SheetTitle>
           </SheetHeader>
-          {/* SettingsSheet content will go here in Phase 8 */}
+          <SettingsSheet />
         </SheetContent>
       </Sheet>
     </div>
