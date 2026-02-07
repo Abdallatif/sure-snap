@@ -12,7 +12,14 @@ createRoot(document.getElementById('root')!).render(
     <SettingsProvider>
       <PersistQueryClientProvider
         client={queryClient}
-        persistOptions={{ persister, maxAge: 7 * 24 * 60 * 60 * 1000 }}
+        persistOptions={{
+          persister,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          dehydrateOptions: {
+            shouldDehydrateMutation: (mutation) =>
+              mutation.state.isPaused || mutation.state.status === 'pending',
+          },
+        }}
         onSuccess={() => {
           queryClient.resumePausedMutations().then(() => {
             queryClient.invalidateQueries()

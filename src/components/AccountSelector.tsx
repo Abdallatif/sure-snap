@@ -38,7 +38,7 @@ export function AccountSelector({
           variant="outline"
           onClick={() => onSelect(account.id)}
           className={cn(
-            'flex h-auto min-h-[52px] flex-col items-center justify-center gap-0.5 px-3 py-2',
+            'flex h-auto min-h-13 flex-col items-center justify-center gap-0.5 px-3 py-2',
             account.id === selectedAccountId &&
               'border-primary bg-primary/10 text-primary',
           )}

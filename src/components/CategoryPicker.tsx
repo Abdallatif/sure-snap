@@ -25,7 +25,7 @@ export function CategoryPicker({
       <Button
         variant="outline"
         onClick={() => setExpanded(true)}
-        className="flex h-auto min-h-[44px] w-full justify-start px-3 py-2"
+        className="flex h-auto min-h-11 w-full justify-start px-3 py-2"
       >
         <Badge variant="secondary" className="text-sm">
           {selectedCategory?.icon && (
@@ -48,7 +48,7 @@ export function CategoryPicker({
             setExpanded(false)
           }}
           className={cn(
-            'flex h-auto min-h-[56px] flex-col items-center gap-1 px-2 py-2 text-xs',
+            'flex h-auto min-h-14 flex-col items-center gap-1 px-2 py-2 text-xs',
             category.id === selectedCategoryId &&
               'border-primary bg-primary/10',
           )}

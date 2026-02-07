@@ -28,7 +28,7 @@ sure-snap/
 │   │   └── client.ts             # fetch wrapper, reads settings for base URL + API key
 │   ├── components/
 │   │   ├── ui/                   # shadcn/ui primitives
-│   │   ├── Header.tsx            # App title + gear icon → opens SettingsSheet
+│   │   ├── Header.tsx            # App title + offline/sync badges + gear icon
 │   │   ├── CaptureForm.tsx       # Orchestrates the full capture flow
 │   │   ├── AccountSelector.tsx   # 2-column grid of enabled accounts (name + currency stacked)
 │   │   ├── AmountInput.tsx       # Large numeric input + currency toggle buttons
@@ -41,7 +41,8 @@ sure-snap/
 │   │   ├── useAccounts.ts        # Query: GET /api/v1/accounts
 │   │   ├── useCategories.ts      # Query: GET /api/v1/categories
 │   │   ├── useTransactions.ts    # Query: GET /api/v1/transactions (recent)
-│   │   └── useCreateTransaction.ts # Mutation with offline retry
+│   │   ├── useCreateTransaction.ts # Mutation (key only — callbacks in setMutationDefaults)
+│   │   └── useOnlineStatus.ts    # Subscribes to connectionStatus from onlineManager
 │   ├── context/
 │   │   └── SettingsContext.tsx    # backendUrl, apiToken, language, enabledAccountIds, currencies
 │   ├── i18n/
@@ -51,7 +52,8 @@ sure-snap/
 │   ├── types/
 │   │   └── index.ts              # Account, Category, Transaction, API response types
 │   └── lib/
-│       ├── queryClient.ts        # TanStack Query client + IndexedDB persister setup
+│       ├── onlineManager.ts      # Custom onlineManager (backend ping + connectionStatus store)
+│       ├── queryClient.ts        # TanStack Query client + persister + mutation defaults
 │       └── utils.ts              # shadcn cn() utility
 ├── index.html
 ├── vite.config.ts
@@ -73,7 +75,9 @@ Two views, no router:
 
 ### Network Mode
 
-All queries and mutations use `networkMode: 'offlineFirst'`. This always attempts the first request (which may succeed from the service worker cache), then pauses retries if offline. This is the correct mode for a PWA with a service worker — unlike `'online'` (won't attempt at all offline) or `'always'` (ignores network status).
+**Queries** use `networkMode: 'offlineFirst'` — always attempts the first request (returns cached data on failure), then pauses retries if offline. Good for serving stale data from the persistence layer.
+
+**Mutations** use `networkMode: 'online'` — the mutation never fires when offline, instead immediately entering `isPaused: true`. This is the correct mode for a queue-and-sync pattern without a service worker intercepting API calls. The mutation is persisted to IndexedDB and fired when connectivity returns. Using `'offlineFirst'` for mutations would waste a request attempt against an unreachable endpoint.
 
 ### Data Flow
 
@@ -81,16 +85,17 @@ All queries and mutations use `networkMode: 'offlineFirst'`. This always attempt
 User submits transaction
         │
         ▼
-useMutation fires (networkMode: 'offlineFirst')
+useMutation created (networkMode: 'online')
         │
         ├─ onMutate: optimistic update → transaction appears in cache immediately
         │
-        ├─ Online?  → POST /api/v1/transactions → onSuccess: confirm in cache
+        ├─ Online?  → POST /api/v1/transactions → onSettled: invalidate cache
         │
-        └─ Offline? → mutation paused (status: 'success', fetchStatus: 'paused')
+        └─ Offline? → mutation paused immediately (isPaused: true)
                      → mutation state persisted to IndexedDB
-                     → on reconnect: resumePausedMutations() fires
-                     → syncs queued transactions in order
+                     → form resets, user can submit more transactions
+                     → on reconnect: mutations fire in order (scope serialization)
+                     → syncs queued transactions sequentially
 ```
 
 ### Persistence Layers
@@ -112,13 +117,14 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000,  // 5 min default for reference data
     },
     mutations: {
-      networkMode: 'offlineFirst',
+      networkMode: 'online',      // pause immediately when offline, fire when online
+      gcTime: Infinity,           // don't GC paused mutations while user is offline
     },
   },
 })
 ```
 
-**Why `gcTime: Infinity`**: The persister saves the entire query cache to IndexedDB. If `gcTime` is shorter than the persister's `maxAge`, data gets garbage collected from memory before it can be restored on next load. Setting it to `Infinity` ensures cached data survives app restarts.
+**Why `gcTime: Infinity` on both**: The persister saves the entire query cache and pending mutations to IndexedDB. If `gcTime` is shorter than the offline period, data or queued mutations get garbage collected before they can sync. Setting it to `Infinity` ensures everything survives.
 
 ### IndexedDB Persister (via `idb-keyval`)
 
@@ -140,25 +146,51 @@ IndexedDB over localStorage because: larger storage limits, non-blocking async r
 
 ### Mutation Persistence with `setMutationDefaults`
 
-When mutations are persisted to IndexedDB, **only the state is saved — functions can't be serialized**. After a page reload, resumed mutations need their `mutationFn` re-attached. This is done via `setMutationDefaults`:
+When mutations are persisted to IndexedDB, **only the state is saved — all functions are lost**. This includes `mutationFn`, `onMutate`, `onError`, `onSettled`, and `scope`. After a page reload, resumed mutations need everything re-attached via `setMutationDefaults`:
 
 ```ts
-// Register BEFORE PersistQueryClientProvider renders
+// Register BEFORE PersistQueryClientProvider renders.
+// ALL function-based options must live here — NOT in useMutation().
 queryClient.setMutationDefaults(['transactions', 'create'], {
-  mutationFn: (variables) => apiClient.createTransaction(variables),
+  mutationFn: (input) => {
+    const config = getApiConfig()
+    if (!config) throw new Error('API not configured')
+    return createTransaction(config, input)
+  },
+  scope: { id: 'create-transaction' },
+  retry: 3,
+  onMutate: async (input) => { /* optimistic update */ },
+  onError: (_err, _vars, context) => { /* rollback */ },
+  onSettled: () => { queryClient.invalidateQueries({ queryKey: ['transactions'] }) },
 })
 ```
 
-Without this, `resumePausedMutations()` throws "No mutationFn found" after page reload.
+The `useMutation` hook in components should **only reference the mutation key** — no inline `mutationFn` or callbacks, as those would shadow the defaults and be lost after rehydration:
+
+```ts
+// CORRECT — inherits everything from setMutationDefaults
+useMutation({ mutationKey: ['transactions', 'create'] })
+
+// WRONG — inline options override defaults, then vanish after persistence
+useMutation({ mutationKey: ['transactions', 'create'], mutationFn: ..., onSettled: ... })
+```
+
+Without `setMutationDefaults`, `resumePausedMutations()` throws "No mutationFn found" after page reload. Without the callbacks in defaults, resumed mutations have no rollback on error and no query invalidation on settle.
 
 ### App Bootstrap Sequence
 
 ```ts
 <PersistQueryClientProvider
   client={queryClient}
-  persistOptions={{ persister, maxAge: 7 * 24 * 60 * 60 * 1000 }} // 7 days
+  persistOptions={{
+    persister,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    dehydrateOptions: {
+      shouldDehydrateMutation: (mutation) =>
+        mutation.state.isPaused || mutation.state.status === 'pending',
+    },
+  }}
   onSuccess={() => {
-    // Cache restored from IndexedDB → resume any queued offline mutations
     queryClient.resumePausedMutations().then(() => {
       queryClient.invalidateQueries()
     })
@@ -166,23 +198,24 @@ Without this, `resumePausedMutations()` throws "No mutationFn found" after page 
 >
 ```
 
-1. App loads → `PersistQueryClientProvider` restores query cache from IndexedDB
+**`shouldDehydrateMutation`**: By default, TanStack Query does **not** persist mutations (`() => false`). We opt in for paused and pending mutations only — not errored or completed ones, which would cause unnecessary replays.
+
+1. App loads → `PersistQueryClientProvider` restores query cache + pending mutations from IndexedDB
 2. `onSuccess` fires → `resumePausedMutations()` replays any offline transactions
 3. After mutations complete → `invalidateQueries()` refetches fresh data
 
 ### Mutation Scoping
 
-Mutations use `scope.id` to ensure serial execution. Without scoping, multiple offline submissions could race when connectivity returns:
+Mutations use `scope.id` (in `setMutationDefaults`) to ensure serial execution. Without scoping, multiple offline submissions could race when connectivity returns:
 
 ```ts
-useMutation({
-  mutationKey: ['transactions', 'create'],
+queryClient.setMutationDefaults(['transactions', 'create'], {
   scope: { id: 'create-transaction' },
   // ...
 })
 ```
 
-All mutations with the same `scope.id` execute in order — subsequent ones start in `isPaused: true` until prior ones complete.
+All mutations with the same `scope.id` execute in order — subsequent ones wait until prior ones complete.
 
 ### Query Configuration by Type
 
@@ -194,36 +227,64 @@ All mutations with the same `scope.id` execute in order — subsequent ones star
 
 ### Optimistic Updates Pattern
 
+All callbacks live in `setMutationDefaults` (not in the `useMutation` hook) so they survive IndexedDB persistence:
+
 ```ts
-// useCreateTransaction mutation
-onMutate: async (newTransaction) => {
-  await queryClient.cancelQueries({ queryKey: ['transactions'] })
-  const previous = queryClient.getQueryData(['transactions'])
-  queryClient.setQueryData(['transactions'], (old) => [newTransaction, ...old])
-  return { previous }
-},
-onError: (_err, _vars, context) => {
-  queryClient.setQueryData(['transactions'], context.previous) // rollback
-},
-onSettled: () => {
-  queryClient.invalidateQueries({ queryKey: ['transactions'] })
-},
+queryClient.setMutationDefaults(['transactions', 'create'], {
+  onMutate: async (input) => {
+    await queryClient.cancelQueries({ queryKey: ['transactions'] })
+    const previous = queryClient.getQueryData(['transactions'])
+    queryClient.setQueryData(['transactions'], (old) => ({
+      ...old,
+      transactions: [optimisticTransaction, ...old.transactions],
+    }))
+    return { previous }
+  },
+  onError: (_err, _vars, context) => {
+    queryClient.setQueryData(['transactions'], context.previous) // rollback
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['transactions'] })
+  },
+})
 ```
 
-**Important**: `onSuccess` callbacks won't fire while offline. UI side effects (like clearing the form, showing a toast) should happen in `onMutate` for the offline case, not `onSuccess`.
+**Important**: With `networkMode: 'online'`, `onMutate` still fires immediately (even when offline) — it's the `mutationFn` that pauses. This means the optimistic update appears instantly, the form can reset, and the user can keep submitting. UI side effects (clearing the form, showing a toast) should happen in the component's `handleSubmit`, not in callbacks.
 
-### Status vs FetchStatus
+### Online Manager (Backend Reachability)
 
-TanStack Query separates data state from network state. Both must be used for correct offline UI:
+TanStack Query's default `onlineManager` only checks `navigator.onLine`, which misses the case where the network is up but the backend is down. We override it in `src/lib/onlineManager.ts` to ping the actual backend:
 
-| `status` | `fetchStatus` | UI meaning |
+```ts
+onlineManager.setEventListener((setOnline) => {
+  // Combines navigator.onLine + periodic backend ping (GET /api/v1/accounts?per_page=1)
+  // Pings every 30s, only when the tab is visible
+  // Any HTTP response (even 4xx) = reachable; network error/timeout = unreachable
+})
+```
+
+This gives us:
+- **Mutations pause** when the backend is unreachable (not just when the browser is offline)
+- **Mutations resume** automatically when the backend becomes reachable again
+- The ping only runs when the tab is focused (no background battery drain)
+
+A parallel `connectionStatus` subscribable exposes three states for the UI:
+
+| Status | Meaning | Header badge |
 |---|---|---|
-| `success` | `idle` | Data loaded, all synced |
-| `success` | `fetching` | Showing cached data, refreshing in background |
-| `success` | `paused` | Showing cached data, offline (can't refresh) |
-| `pending` | `paused` | No cached data and offline — show empty/placeholder |
+| `'online'` | Network up + backend reachable | No badge |
+| `'offline'` | `navigator.onLine` is false | Amber "Offline" badge with WifiOff icon |
+| `'server-unreachable'` | Network up but backend ping failed | Red "Server unreachable" badge with ServerOff icon |
 
-Use this to show a "pending sync" indicator when `fetchStatus === 'paused'` and there are unsynced mutations.
+The `useConnectionStatus()` hook subscribes to this store via `useSyncExternalStore`.
+
+### Pending Mutations Indicator
+
+The Header uses `useMutationState({ filters: { status: 'pending' } })` to show a count of queued mutations with a spinning loader icon. This appears alongside the offline/server badges.
+
+### CaptureForm Submit Button
+
+The submit button uses `isPending && !isPaused` (not just `isPending`) to determine the disabled/loading state. When mutations are paused (queued offline), the button stays enabled so users can submit multiple transactions. The pending count in the header provides sync visibility.
 
 ### PWA Service Worker (Workbox)
 
@@ -280,7 +341,7 @@ isConfigured: boolean         // backendUrl && apiToken both non-empty
 App
 ├── SettingsContext.Provider          ← localStorage
 │   ├── PersistQueryClientProvider    ← IndexedDB
-│   │   ├── Header                   ← settings (gear icon)
+│   │   ├── Header                   ← useConnectionStatus() + useMutationState() + gear icon
 │   │   ├── SetupBanner              ← settings.isConfigured
 │   │   └── CaptureForm
 │   │       ├── AccountSelector      ← useAccounts() + settings.enabledAccountIds (2-col grid)

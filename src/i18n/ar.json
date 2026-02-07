@@ -34,6 +34,7 @@
   "common.success": "نجاح",
   "common.error": "خطأ",
   "common.offline": "غير متصل",
+  "common.serverUnreachable": "الخادم غير متاح",
   "common.pendingSync": "بانتظار المزامنة",
   "common.loading": "جارٍ التحميل…"
 }

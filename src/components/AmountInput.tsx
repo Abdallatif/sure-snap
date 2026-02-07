@@ -26,10 +26,14 @@ export function AmountInput({
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <label className="text-sm font-medium text-muted-foreground">
+      <label
+        htmlFor="amount-input"
+        className="text-sm font-medium text-muted-foreground"
+      >
         {t('capture.amount')}
       </label>
       <input
+        id="amount-input"
         ref={inputRef}
         type="text"
         inputMode="decimal"
@@ -57,7 +61,7 @@ export function AmountInput({
             <ToggleGroupItem
               key={code}
               value={code}
-              className="min-h-[36px] px-3 text-xs"
+              className="min-h-9 px-3 text-xs"
             >
               {code}
             </ToggleGroupItem>

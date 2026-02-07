@@ -21,7 +21,7 @@ export function AccountsSettings() {
   return (
     <section className="flex flex-col gap-3">
       <Label>{t('settings.accounts')}</Label>
-      <div className="flex max-h-[200px] flex-col gap-2 overflow-y-auto">
+      <div className="flex max-h-50 flex-col gap-2 overflow-y-auto">
         {accounts.map((account) => (
           <label
             key={account.id}

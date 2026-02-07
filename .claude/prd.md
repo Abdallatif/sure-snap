@@ -93,12 +93,15 @@ Transactions are captured regardless of connectivity and synced when online.
 
 **Acceptance Criteria:**
 1. Submitting a transaction while online sends it immediately to the Sure API
-2. Submitting while offline stores the transaction locally
+2. Submitting while offline stores the transaction locally and persists it to IndexedDB
 3. Offline transactions sync automatically when connectivity returns (no user action)
-4. The user sees a visual indicator when there are pending unsynced transactions
-5. Optimistic update: newly submitted transactions appear in the suggestions list immediately, even before sync
-6. Failed syncs retry automatically with exponential backoff
-7. Reference data (accounts, categories) remains available offline from cache
+4. The user sees a visual indicator when there are pending unsynced transactions (blue badge with count in header)
+5. The header distinguishes between "Offline" (no network, amber badge) and "Server unreachable" (network up but backend down, red badge)
+6. Optimistic update: newly submitted transactions appear in the suggestions list immediately, even before sync
+7. Failed syncs retry automatically (up to 3 retries)
+8. Reference data (accounts, categories) remains available offline from cache
+9. The user can submit multiple transactions while offline — the form does not block on pending sync
+10. Queued transactions sync in submission order (serial execution via mutation scoping)
 
 ### F8: Internationalization (EN/AR)
 

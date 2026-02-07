@@ -2,7 +2,12 @@ import { QueryClient } from '@tanstack/react-query'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { get, set, del } from 'idb-keyval'
 import { createTransaction } from '@/api/client'
-import type { CreateTransactionInput } from '@/types'
+import { getApiConfig } from './onlineManager'
+import type {
+  CreateTransactionInput,
+  Transaction,
+  TransactionCollection,
+} from '@/types'
 
 // --- Query Client ---
 
@@ -14,7 +19,8 @@ export const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000, // 5 min default
     },
     mutations: {
-      networkMode: 'offlineFirst',
+      networkMode: 'online',
+      gcTime: Infinity,
     },
   },
 })
@@ -32,24 +38,68 @@ export const persister = createAsyncStoragePersister({
 
 // --- Mutation Defaults ---
 // Functions can't be serialized to IndexedDB. After a page reload,
-// resumed mutations need their mutationFn re-attached. We read the
-// API config from localStorage so this works outside React context.
-
-function getApiConfig() {
-  try {
-    const raw = localStorage.getItem('suresnap-settings')
-    if (!raw) throw new Error('No settings')
-    const settings = JSON.parse(raw)
-    return {
-      backendUrl: settings.backendUrl ?? '',
-      apiToken: settings.apiToken ?? '',
-    }
-  } catch {
-    return { backendUrl: '', apiToken: '' }
-  }
-}
+// resumed mutations need their mutationFn AND callbacks re-attached.
+// Everything that should survive persistence must live here, not in
+// the useMutation hook.
 
 queryClient.setMutationDefaults(['transactions', 'create'], {
-  mutationFn: (input: CreateTransactionInput) =>
-    createTransaction(getApiConfig(), input),
+  mutationFn: (input: CreateTransactionInput) => {
+    const config = getApiConfig()
+    if (!config) throw new Error('API not configured')
+    return createTransaction(config, input)
+  },
+  scope: { id: 'create-transaction' },
+  retry: 3,
+
+  onMutate: async (input: CreateTransactionInput) => {
+    await queryClient.cancelQueries({ queryKey: ['transactions'] })
+
+    const previous =
+      queryClient.getQueryData<TransactionCollection>(['transactions'])
+
+    queryClient.setQueryData<TransactionCollection>(['transactions'], (old) => {
+      if (!old) return old
+
+      const optimistic: Transaction = {
+        id: `optimistic-${Date.now()}`,
+        date: input.date,
+        amount: String(input.amount),
+        currency: input.currency ?? '',
+        name: input.name,
+        notes: input.notes ?? null,
+        classification: input.nature ?? 'expense',
+        account: { id: input.account_id, name: '', account_type: '' },
+        category: input.category_id
+          ? { id: input.category_id, name: '', classification: 'expense', color: '', icon: '' }
+          : null,
+        merchant: null,
+        tags: [],
+        transfer: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+
+      return {
+        ...old,
+        transactions: [optimistic, ...old.transactions],
+      }
+    })
+
+    return { previous }
+  },
+
+  onError: (
+    _err: Error,
+    _vars: CreateTransactionInput,
+    context: unknown,
+  ) => {
+    const ctx = context as { previous?: TransactionCollection }
+    if (ctx?.previous) {
+      queryClient.setQueryData(['transactions'], ctx.previous)
+    }
+  },
+
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['transactions'] })
+  },
 })

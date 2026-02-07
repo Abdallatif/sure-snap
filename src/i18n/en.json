@@ -34,6 +34,7 @@
   "common.success": "Success",
   "common.error": "Error",
   "common.offline": "Offline",
+  "common.serverUnreachable": "Server unreachable",
   "common.pendingSync": "Pending sync",
   "common.loading": "Loading…"
 }

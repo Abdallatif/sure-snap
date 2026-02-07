@@ -168,11 +168,11 @@ export function CaptureForm() {
 
       <Button
         size="lg"
-        className="min-h-[48px] w-full text-base"
-        disabled={!canSubmit || createTransaction.isPending}
+        className="min-h-12 w-full text-base"
+        disabled={!canSubmit || (createTransaction.isPending && !createTransaction.isPaused)}
         onClick={handleSubmit}
       >
-        {createTransaction.isPending
+        {createTransaction.isPending && !createTransaction.isPaused
           ? t('common.loading')
           : t('capture.submit')}
       </Button>
