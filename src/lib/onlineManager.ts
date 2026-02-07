@@ -9,8 +9,10 @@ export function getApiConfig() {
     const raw = localStorage.getItem('suresnap-settings')
     if (!raw) return null
     const { backendUrl, apiToken } = JSON.parse(raw)
-    if (!backendUrl?.trim() || !apiToken?.trim()) return null
-    return { backendUrl: backendUrl.trim(), apiToken: apiToken.trim() }
+    const trimmedUrl = (backendUrl ?? '').trim()
+    const trimmedToken = (apiToken ?? '').trim()
+    if (!trimmedToken) return null
+    return { backendUrl: trimmedUrl, apiToken: trimmedToken }
   } catch {
     return null
   }
