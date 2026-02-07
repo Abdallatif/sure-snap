@@ -81,13 +81,12 @@ When running via Docker, set `SURE_API_UPSTREAM` to enable the built-in reverse 
 
 <p align="center">
   <img src="screenshots/transaction-form-empty.png" width="180">&nbsp;&nbsp;
-  <img src="screenshots/transaction-form-filled.png" width="180">&nbsp;&nbsp;
   <img src="screenshots/settings-drawer.png" width="180">&nbsp;&nbsp;
   <img src="screenshots/offline-indicator.png" width="180">&nbsp;&nbsp;
   <img src="screenshots/server-unreachable.png" width="180">
 </p>
 <p align="center">
-  <em>Transaction form · Filled form · Settings · Offline mode · Server unreachable</em>
+  <em>Transaction form · Settings · Offline mode · Server unreachable</em>
 </p>
 
 ## Contributing
