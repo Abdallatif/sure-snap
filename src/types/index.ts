@@ -53,6 +53,14 @@ export interface Tag {
   color: string
 }
 
+export interface TagDetail {
+  id: string
+  name: string
+  color: string
+  created_at: string
+  updated_at: string
+}
+
 export interface Merchant {
   id: string
   name: string

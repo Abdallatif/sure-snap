@@ -114,7 +114,22 @@ Full English and Arabic support with RTL layout.
 4. The language setting persists across sessions
 5. Number formatting respects the selected locale
 
-### F9: PWA Installability
+### F9: Tag Picker
+
+A row of toggleable colored chips for tagging transactions.
+
+**Acceptance Criteria:**
+1. Tags are fetched from the Sure API (`GET /api/v1/tags`) and cached offline
+2. Each tag appears as a colored chip showing its name and color dot
+3. Tapping a chip toggles it on (filled with tag color) or off (outlined)
+4. Multiple tags can be selected at once
+5. Selected tag IDs are sent as `tag_ids` in the create transaction payload
+6. When a suggestion chip is selected, its tags are auto-filled if no tags are currently selected
+7. The tag picker is hidden by default; users enable it via a "Show tags" toggle in settings
+8. When hidden or when no tags exist in the family, the tag section does not appear
+9. Tags are cleared when the form is reset after submission
+
+### F10: PWA Installability
 
 The app is installable as a standalone PWA on mobile devices.
 
@@ -136,7 +151,7 @@ The app is installable as a standalone PWA on mobile devices.
 - Merchant selection (not needed for quick capture)
 - Income transactions (this is an expense capture tool)
 - Budget tracking or analytics
-- Tags (can be added later)
+- Tag creation/editing (use Sure for that — SureSnap only selects existing tags)
 
 ## Technical Constraints
 

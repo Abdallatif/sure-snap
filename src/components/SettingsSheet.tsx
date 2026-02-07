@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Label } from './ui/label'
+import { Switch } from './ui/switch'
 import { AccountsSettings } from './AccountsSettings'
 import { ConnectionSettings } from './ConnectionSettings'
 import { CurrencyPicker } from './CurrencyPicker'
@@ -8,7 +9,7 @@ import { useSettings } from '@/context/SettingsContext'
 
 export function SettingsSheet() {
   const { t } = useTranslation()
-  const { currencies, updateSettings } = useSettings()
+  const { currencies, showTags, updateSettings } = useSettings()
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -20,6 +21,15 @@ export function SettingsSheet() {
         <CurrencyPicker
           selected={currencies}
           onChange={(next) => updateSettings({ currencies: next })}
+        />
+      </section>
+
+      <section className="flex items-center justify-between">
+        <Label htmlFor="show-tags">{t('settings.showTags')}</Label>
+        <Switch
+          id="show-tags"
+          checked={showTags}
+          onCheckedChange={(checked) => updateSettings({ showTags: checked })}
         />
       </section>
 

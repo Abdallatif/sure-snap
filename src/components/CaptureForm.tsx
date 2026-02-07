@@ -5,21 +5,24 @@ import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories } from '@/hooks/useCategories'
 import { useTransactions } from '@/hooks/useTransactions'
 import { useCreateTransaction } from '@/hooks/useCreateTransaction'
+import { useTags } from '@/hooks/useTags'
 import { AccountSelector } from './AccountSelector'
 import { AmountInput } from './AmountInput'
 import { CategoryPicker } from './CategoryPicker'
 import { DescriptionInput } from './DescriptionInput'
 import { SuggestionChips, type Suggestion } from './SuggestionChips'
+import { TagPicker } from './TagPicker'
 import { Button } from './ui/button'
 
 export function CaptureForm() {
   const { t } = useTranslation()
-  const { enabledAccountIds, lastUsedAccountId, currencies, updateSettings } =
+  const { enabledAccountIds, lastUsedAccountId, currencies, showTags, updateSettings } =
     useSettings()
 
   const { data: accounts = [] } = useAccounts()
   const { data: categories = [] } = useCategories()
   const { data: transactions = [] } = useTransactions()
+  const { data: tags = [] } = useTags()
   const createTransaction = useCreateTransaction()
 
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
@@ -32,6 +35,7 @@ export function CaptureForm() {
   )
   const [selectedCategoryName, setSelectedCategoryName] = useState('')
   const [description, setDescription] = useState('')
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
 
   // Pre-select lastUsedAccountId when accounts load
@@ -63,7 +67,16 @@ export function CaptureForm() {
     setSelectedCategoryId(null)
     setSelectedCategoryName('')
     setDescription('')
+    setSelectedTagIds([])
   }, [])
+
+  function handleTagToggle(tagId: string) {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId],
+    )
+  }
 
   function handleSuggestionSelect({ name, transaction }: Suggestion) {
     setDescription(name)
@@ -86,6 +99,10 @@ export function CaptureForm() {
     if (!selectedCurrency && transaction.currency) {
       setSelectedCurrency(transaction.currency)
     }
+
+    if (selectedTagIds.length === 0 && transaction.tags.length > 0) {
+      setSelectedTagIds(transaction.tags.map((t) => t.id))
+    }
   }
 
   function handleSubmit() {
@@ -101,6 +118,7 @@ export function CaptureForm() {
       nature: 'expense' as const,
       category_id: selectedCategoryId,
       currency: selectedCurrency || undefined,
+      tag_ids: selectedTagIds.length > 0 ? selectedTagIds : undefined,
     }
 
     updateSettings({ lastUsedAccountId: selectedAccountId })
@@ -145,6 +163,17 @@ export function CaptureForm() {
           }}
         />
       </div>
+
+      {showTags && tags.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">{t('capture.tags')}</label>
+          <TagPicker
+            tags={tags}
+            selectedTagIds={selectedTagIds}
+            onToggle={handleTagToggle}
+          />
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">

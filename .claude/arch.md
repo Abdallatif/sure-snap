@@ -34,6 +34,7 @@ sure-snap/
 │   │   ├── AmountInput.tsx       # Large numeric input + currency toggle buttons
 │   │   ├── CategoryPicker.tsx    # Flat grid of categories, expanded by default
 │   │   ├── DescriptionInput.tsx  # Text input for transaction name
+│   │   ├── TagPicker.tsx         # Toggleable colored tag chips (multi-select)
 │   │   ├── SuggestionChips.tsx   # Recent matching transaction names
 │   │   ├── SettingsSheet.tsx     # Sheet drawer with all settings
 │   │   └── SetupBanner.tsx       # First-time setup prompt
@@ -41,6 +42,7 @@ sure-snap/
 │   │   ├── useAccounts.ts        # Query: GET /api/v1/accounts
 │   │   ├── useCategories.ts      # Query: GET /api/v1/categories
 │   │   ├── useTransactions.ts    # Query: GET /api/v1/transactions (recent)
+│   │   ├── useTags.ts             # Query: GET /api/v1/tags
 │   │   ├── useCreateTransaction.ts # Mutation (key only — callbacks in setMutationDefaults)
 │   │   └── useOnlineStatus.ts    # Subscribes to connectionStatus from onlineManager
 │   ├── context/
@@ -223,6 +225,7 @@ All mutations with the same `scope.id` execute in order — subsequent ones wait
 |---|---|---|
 | `useAccounts` | 5 min | Reference data, rarely changes |
 | `useCategories` | 5 min | Reference data, rarely changes |
+| `useTags` | 5 min | Reference data, rarely changes |
 | `useTransactions` | 1 min | Want fresher data for suggestions |
 
 ### Optimistic Updates Pattern
@@ -317,6 +320,7 @@ interface Settings {
   enabledAccountIds: string[]     // accounts visible in AccountSelector
   lastUsedAccountId: string|null  // auto-set on submit, not shown in settings sheet
   currencies: string[]            // available currencies for the capture form (default: ['USD', 'EUR', 'ILS'])
+  showTags: boolean               // show tag picker in capture form (default: false)
 }
 
 // Derived
@@ -347,6 +351,7 @@ App
 │   │       ├── AccountSelector      ← useAccounts() + settings.enabledAccountIds (2-col grid)
 │   │       ├── AmountInput          ← selected currency + settings.currencies (toggle buttons)
 │   │       ├── CategoryPicker       ← useCategories() (flat grid, expanded by default)
+│   │       ├── TagPicker            ← useTags() (toggleable colored chips, multi-select)
 │   │       ├── DescriptionInput     ← local state
 │   │       ├── SuggestionChips      ← useTransactions() filtered
 │   │       └── Submit Button        ← useCreateTransaction()

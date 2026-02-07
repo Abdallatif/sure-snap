@@ -3,6 +3,7 @@ import type {
   ApiError,
   CategoryCollection,
   CreateTransactionInput,
+  TagDetail,
   Transaction,
   TransactionCollection,
 } from '@/types'
@@ -77,6 +78,10 @@ export function getTransactions(
     config,
     `/api/v1/transactions?per_page=${perPage}`,
   )
+}
+
+export function getTags(config: ApiClientConfig) {
+  return request<TagDetail[]>(config, '/api/v1/tags')
 }
 
 export function createTransaction(

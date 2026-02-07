@@ -5,6 +5,8 @@ import { createTransaction } from '@/api/client'
 import { getApiConfig } from './onlineManager'
 import type {
   CreateTransactionInput,
+  Tag,
+  TagDetail,
   Transaction,
   TransactionCollection,
 } from '@/types'
@@ -35,6 +37,15 @@ export const persister = createAsyncStoragePersister({
   },
   throttleTime: 1000,
 })
+
+function resolveTagIds(tagIds: string[] | undefined): Tag[] {
+  if (!tagIds?.length) return []
+  const cached = queryClient.getQueryData<TagDetail[]>(['tags']) ?? []
+  return tagIds.map((id) => {
+    const tag = cached.find((t) => t.id === id)
+    return { id, name: tag?.name ?? '', color: tag?.color ?? '' }
+  })
+}
 
 // --- Mutation Defaults ---
 // Functions can't be serialized to IndexedDB. After a page reload,
@@ -73,7 +84,7 @@ queryClient.setMutationDefaults(['transactions', 'create'], {
           ? { id: input.category_id, name: '', classification: 'expense', color: '', icon: '' }
           : null,
         merchant: null,
-        tags: [],
+        tags: resolveTagIds(input.tag_ids),
         transfer: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
