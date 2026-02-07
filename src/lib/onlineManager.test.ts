@@ -12,12 +12,12 @@ describe('getApiConfig', () => {
     expect(getApiConfig()).toBeNull()
   })
 
-  it('returns null when backendUrl is empty', () => {
+  it('returns config with empty backendUrl (same-origin mode)', () => {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ backendUrl: '', apiToken: 'tok' }),
     )
-    expect(getApiConfig()).toBeNull()
+    expect(getApiConfig()).toEqual({ backendUrl: '', apiToken: 'tok' })
   })
 
   it('returns null when apiToken is empty', () => {
@@ -28,12 +28,12 @@ describe('getApiConfig', () => {
     expect(getApiConfig()).toBeNull()
   })
 
-  it('returns null when backendUrl is whitespace', () => {
+  it('returns config with empty backendUrl when whitespace-only (same-origin mode)', () => {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ backendUrl: '   ', apiToken: 'tok' }),
     )
-    expect(getApiConfig()).toBeNull()
+    expect(getApiConfig()).toEqual({ backendUrl: '', apiToken: 'tok' })
   })
 
   it('returns trimmed config when both values are set', () => {
