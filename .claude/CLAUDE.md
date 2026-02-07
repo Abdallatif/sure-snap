@@ -48,6 +48,13 @@ When working with shadcn/ui components, use **logical CSS properties** instead o
 
 Reference: [shadcn RTL docs](https://ui.shadcn.com/docs/rtl)
 
+## Commit Convention
+
+- One-line message that describes **why**, not what
+- Use conventional prefix: `fix:`, `feat:`, `refactor:`, `docs:`, `chore:`
+- No AI/LLM attribution in commit messages
+- Example: `fix: allow empty API origin for same-origin deployments`
+
 ## Releasing a New Version
 
 Image: `ghcr.io/abdallatif/sure-snap` (built by `.github/workflows/docker.yml`)
