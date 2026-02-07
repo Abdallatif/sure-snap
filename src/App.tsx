@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CaptureForm } from './components/CaptureForm'
 import { Header } from './components/Header'
 import { SetupBanner } from './components/SetupBanner'
 import { SettingsSheet } from './components/SettingsSheet'
@@ -22,7 +23,7 @@ function App() {
 
       {isConfigured ? (
         <main className="flex flex-1 flex-col p-4">
-          {/* CaptureForm will go here in Phase 9 */}
+          <CaptureForm />
         </main>
       ) : (
         <SetupBanner onOpenSettings={() => setSettingsOpen(true)} />

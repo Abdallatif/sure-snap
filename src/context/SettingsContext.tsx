@@ -15,6 +15,7 @@ export interface Settings {
   language: 'en' | 'ar'
   enabledAccountIds: string[]
   lastUsedAccountId: string | null
+  currencies: string[]
 }
 
 interface SettingsContextValue extends Settings {
@@ -30,6 +31,7 @@ const defaultSettings: Settings = {
   language: 'en',
   enabledAccountIds: [],
   lastUsedAccountId: null,
+  currencies: ['USD', 'EUR', 'ILS'],
 }
 
 function loadSettings(): Settings {

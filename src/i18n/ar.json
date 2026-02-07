@@ -8,6 +8,7 @@
   "capture.submit": "حفظ المعاملة",
   "capture.success": "تم حفظ المعاملة",
   "capture.back": "رجوع",
+  "capture.noAccounts": "لا توجد حسابات مفعّلة. افتح الإعدادات لتفعيل الحسابات.",
 
   "settings.title": "الإعدادات",
   "settings.backendUrl": "رابط الخادم",
@@ -20,6 +21,8 @@
   "settings.connectionSuccess": "تم الاتصال بنجاح",
   "settings.connectionFailed": "فشل الاتصال",
   "settings.accounts": "الحسابات",
+  "settings.currencies": "العملات",
+  "settings.currencyPlaceholder": "ابحث عن عملة…",
   "settings.language": "اللغة",
 
   "setup.message": "اتصل بخادم Sure لبدء تسجيل المعاملات.",

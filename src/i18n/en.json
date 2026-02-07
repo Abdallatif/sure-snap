@@ -8,6 +8,7 @@
   "capture.submit": "Save Transaction",
   "capture.success": "Transaction saved",
   "capture.back": "Back",
+  "capture.noAccounts": "No accounts enabled. Open settings to enable accounts.",
 
   "settings.title": "Settings",
   "settings.backendUrl": "Backend URL",
@@ -20,6 +21,8 @@
   "settings.connectionSuccess": "Success",
   "settings.connectionFailed": "Failed",
   "settings.accounts": "Accounts",
+  "settings.currencies": "Currencies",
+  "settings.currencyPlaceholder": "Search currencies…",
   "settings.language": "Language",
 
   "setup.message": "Connect to your Sure instance to start capturing transactions.",
