@@ -272,3 +272,48 @@ References: [arch.md](./arch.md) | [prd.md](./prd.md) | [Sure API docs](./sure-d
 5. Test on iOS Safari + Android Chrome
 
 **Verify**: Full end-to-end on mobile device or emulator. All PRD acceptance criteria pass.
+
+---
+
+## Phase 13: Deployment
+
+**Goal**: Dockerized production build served by nginx, ready to slot into a self-hosted compose stack alongside the Sure backend.
+
+**Steps**:
+1. Create a multi-stage `Dockerfile`:
+   - **Stage 1 (build)**: `node` image — `yarn install` + `yarn build` to produce `dist/`
+   - **Stage 2 (serve)**: `nginx:alpine` image — copy `dist/` into `/usr/share/nginx/html`
+2. Create `nginx.conf` with:
+   - SPA fallback: `try_files $uri $uri/ /index.html` so client-side routing works
+   - Gzip compression for static assets
+   - Cache headers for hashed assets (`/assets/*` → long cache), short cache for `index.html`
+   - **(Optional) API reverse proxy**: an `/api/` location block that proxies to the Sure backend, controlled by an environment variable (e.g. `SURE_API_UPSTREAM`). When set, nginx proxies `/api/*` requests to the upstream; when unset, the block is skipped (the app talks directly to the configured backend URL in settings).
+3. Create an `entrypoint.sh` script that uses `envsubst` to template the nginx config at container startup, enabling/disabling the API proxy based on the env var.
+4. Add `.dockerignore` (exclude `node_modules`, `.git`, etc.)
+
+**Files created**:
+- `Dockerfile`
+- `nginx.conf` (template with `${SURE_API_UPSTREAM}` placeholder)
+- `entrypoint.sh`
+- `.dockerignore`
+
+**Example compose usage** (for reference — lives in the host stack repo, not here):
+```yaml
+services:
+  sure-snap:
+    build: ./sure-snap          # or image: ghcr.io/…/sure-snap
+    ports:
+      - "8080:80"
+    environment:
+      - SURE_API_UPSTREAM=http://sure-api:3000   # optional — enables /api proxy
+    depends_on:
+      - sure-api
+
+  sure-api:
+    image: ghcr.io/we-promise/sure:latest
+    # ...
+```
+
+When `SURE_API_UPSTREAM` is set, the app can use a relative `/api/v1/…` backend URL (no CORS needed). When unset, the user provides the full Sure backend URL in settings as usual.
+
+**Verify**: `docker build -t sure-snap .` → `docker run -p 8080:80 sure-snap` → app loads at `localhost:8080`, routes work on refresh. Test with `SURE_API_UPSTREAM` set to confirm `/api/` proxying.

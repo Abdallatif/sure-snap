@@ -30,9 +30,9 @@ sure-snap/
 │   │   ├── ui/                   # shadcn/ui primitives
 │   │   ├── Header.tsx            # App title + gear icon → opens SettingsSheet
 │   │   ├── CaptureForm.tsx       # Orchestrates the full capture flow
-│   │   ├── AccountSelector.tsx   # Toggle group of enabled accounts
-│   │   ├── AmountInput.tsx       # Large numeric input + currency badge
-│   │   ├── CategoryPicker.tsx    # Collapsible grid of category buttons
+│   │   ├── AccountSelector.tsx   # 2-column grid of enabled accounts (name + currency stacked)
+│   │   ├── AmountInput.tsx       # Large numeric input + currency toggle buttons
+│   │   ├── CategoryPicker.tsx    # Flat grid of categories, expanded by default
 │   │   ├── DescriptionInput.tsx  # Text input for transaction name
 │   │   ├── SuggestionChips.tsx   # Recent matching transaction names
 │   │   ├── SettingsSheet.tsx     # Sheet drawer with all settings
@@ -43,7 +43,7 @@ sure-snap/
 │   │   ├── useTransactions.ts    # Query: GET /api/v1/transactions (recent)
 │   │   └── useCreateTransaction.ts # Mutation with offline retry
 │   ├── context/
-│   │   └── SettingsContext.tsx    # backendUrl, apiToken, language, enabledAccountIds
+│   │   └── SettingsContext.tsx    # backendUrl, apiToken, language, enabledAccountIds, currencies
 │   ├── i18n/
 │   │   ├── index.ts              # i18next configuration
 │   │   ├── en.json
@@ -255,6 +255,7 @@ interface Settings {
   language: 'en' | 'ar'
   enabledAccountIds: string[]     // accounts visible in AccountSelector
   lastUsedAccountId: string|null  // auto-set on submit, not shown in settings sheet
+  currencies: string[]            // available currencies for the capture form (default: ['USD', 'EUR', 'ILS'])
 }
 
 // Derived
@@ -282,15 +283,16 @@ App
 │   │   ├── Header                   ← settings (gear icon)
 │   │   ├── SetupBanner              ← settings.isConfigured
 │   │   └── CaptureForm
-│   │       ├── AccountSelector      ← useAccounts() + settings.enabledAccountIds
-│   │       ├── AmountInput          ← selected account (for currency)
-│   │       ├── CategoryPicker       ← useCategories()
+│   │       ├── AccountSelector      ← useAccounts() + settings.enabledAccountIds (2-col grid)
+│   │       ├── AmountInput          ← selected currency + settings.currencies (toggle buttons)
+│   │       ├── CategoryPicker       ← useCategories() (flat grid, expanded by default)
 │   │       ├── DescriptionInput     ← local state
 │   │       ├── SuggestionChips      ← useTransactions() filtered
 │   │       └── Submit Button        ← useCreateTransaction()
 │   └── SettingsSheet
 │       ├── Connection section       ← settings (URL, token)
 │       ├── Accounts section         ← useAccounts() + settings.enabledAccountIds
+│       ├── Currencies section       ← settings.currencies (add/remove)
 │       └── Language section         ← settings.language
 ```
 

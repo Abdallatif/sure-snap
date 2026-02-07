@@ -18,7 +18,7 @@ The core feature. A single screen that captures a transaction with minimal taps.
 
 **Acceptance Criteria:**
 1. The capture screen is the first and only screen the user sees on launch
-2. The form includes: account selector, amount input, category picker, description input
+2. The form includes: account selector, amount input with currency selector, category picker, description input
 3. Date is auto-set to the current date (not shown to user)
 4. Transaction nature defaults to `expense`
 5. Submitting clears the form and shows a brief success confirmation
@@ -27,26 +27,26 @@ The core feature. A single screen that captures a transaction with minimal taps.
 
 ### F2: Account Selector
 
-A row of toggle buttons showing the user's enabled accounts.
+A 2-column grid of toggle buttons showing the user's enabled accounts.
 
 **Acceptance Criteria:**
 1. Displays only accounts the user has enabled in settings
-2. Each button shows the account name and currency (e.g. "Cash · ILS")
-3. Exactly one account is selected at a time
-4. The previously used account is pre-selected on next launch
-5. Changing the account updates the currency shown in the amount input
+2. Laid out as a 2-column grid (2 accounts per row)
+3. Each button shows the account name on the first line and currency on a second line below it
+4. Exactly one account is selected at a time
+5. The previously used account is pre-selected on next launch
+6. Changing the account updates the default currency in the amount input
 
 ### F3: Category Picker
 
-A collapsible grid of category buttons with 2-level hierarchy.
+A flat grid of category buttons, expanded by default.
 
 **Acceptance Criteria:**
-1. **Collapsed state**: shows the selected category as a compact chip (icon + name). If no category is selected, shows a "Select category" placeholder
-2. **Expanded state**: tapping the collapsed chip expands into a scrollable 2-column grid of root categories
-3. Tapping a root category that has subcategories shows its subcategories in the grid, with a back button to return to roots
-4. Tapping a root category with no subcategories (or a subcategory) selects it and collapses the picker
-5. Categories are fetched from the Sure API and cached offline
-6. Only expense categories are shown (classification = `expense`)
+1. **Expanded by default**: on launch, shows a scrollable 2-column grid of all expense categories (flat list, no hierarchy/nesting)
+2. Tapping a category selects it and collapses the picker to show the selected category as a compact chip (icon + name)
+3. Tapping the collapsed chip re-expands the grid
+4. Categories are fetched from the Sure API and cached offline
+5. Only expense categories are shown (classification = `expense`)
 
 ### F4: Suggestion Chips
 
@@ -69,11 +69,12 @@ A side-panel (shadcn Sheet) for configuration, opened via a gear icon in the hea
 2. **Connection section**: Backend URL text input + API token text input
 3. **Test Connection button**: calls GET /api/v1/accounts to validate URL + token. Shows success/failure feedback
 4. **Accounts section**: lists all accounts fetched from the API, each with a toggle switch to enable/disable visibility in the capture screen
-5. **Language section**: toggle between English and Arabic
-6. Changing language immediately switches the UI language and text direction (LTR/RTL)
-7. All settings persist across app restarts (localStorage)
-8. The sheet closes on outside tap or explicit close button
-9. API token input is masked by default with a show/hide toggle
+5. **Currencies section**: manage a list of available currencies for the capture form. Users can add currency codes (stored uppercase, deduplicated) and remove existing ones. Default list: `['USD', 'EUR', 'ILS']`
+6. **Language section**: toggle between English and Arabic
+7. Changing language immediately switches the UI language and text direction (LTR/RTL)
+8. All settings persist across app restarts (localStorage)
+9. The sheet closes on outside tap or explicit close button
+10. API token input is masked by default with a show/hide toggle
 
 ### F6: First-Time Setup
 
