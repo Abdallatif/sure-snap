@@ -38,7 +38,7 @@ export function CategoryPicker({
   }
 
   return (
-    <div className="grid max-h-60 grid-cols-2 gap-2 overflow-y-auto">
+    <div className="grid max-h-50 grid-cols-2 gap-2 overflow-y-auto">
       {categories.map((category) => (
         <Button
           key={category.id}
