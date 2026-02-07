@@ -14,6 +14,7 @@
   "settings.title": "Settings",
   "settings.backendUrl": "Backend URL",
   "settings.backendUrlPlaceholder": "https://app.sure.am",
+  "settings.backendUrlHint": "Leave empty to use the same origin",
   "settings.apiToken": "API Token",
   "settings.apiTokenPlaceholder": "Enter your API token",
   "settings.showToken": "Show",

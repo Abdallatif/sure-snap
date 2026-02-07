@@ -80,7 +80,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<SettingsContextValue>(
     () => ({
       ...settings,
-      isConfigured: settings.backendUrl.trim() !== '' && settings.apiToken.trim() !== '',
+      isConfigured: settings.apiToken.trim() !== '',
       updateSettings,
     }),
     [settings, updateSettings],

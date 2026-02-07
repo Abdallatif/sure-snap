@@ -30,7 +30,8 @@ async function request<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const url = `${config.backendUrl.replace(/\/+$/, '')}${path}`
+  const base = config.backendUrl.trim() ? config.backendUrl.replace(/\/+$/, '') : ''
+  const url = `${base}${path}`
 
   const res = await fetch(url, {
     ...options,

@@ -42,6 +42,7 @@ export function ConnectionSettings() {
             setTestResult(null)
           }}
         />
+        <p className="text-xs text-muted-foreground">{t('settings.backendUrlHint')}</p>
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -77,7 +78,7 @@ export function ConnectionSettings() {
         <Button
           variant="outline"
           size="sm"
-          disabled={!backendUrl.trim() || !apiToken.trim() || testing}
+          disabled={!apiToken.trim() || testing}
           onClick={handleTestConnection}
         >
           {testing && <Loader2 className="animate-spin" />}
