@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { LucideIcon } from './LucideIcon'
@@ -17,6 +17,10 @@ export function CategoryPicker({
   onSelect,
 }: CategoryPickerProps) {
   const [expanded, setExpanded] = useState(true)
+
+  useEffect(() => {
+    if (selectedCategoryId) setExpanded(false)
+  }, [selectedCategoryId])
 
   const selectedCategory = categories.find((c) => c.id === selectedCategoryId)
 

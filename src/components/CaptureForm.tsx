@@ -36,6 +36,7 @@ export function CaptureForm() {
   const [selectedCategoryName, setSelectedCategoryName] = useState('')
   const [description, setDescription] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [suggestionPicked, setSuggestionPicked] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 
   // Pre-select lastUsedAccountId when accounts load
@@ -68,6 +69,7 @@ export function CaptureForm() {
     setSelectedCategoryName('')
     setDescription('')
     setSelectedTagIds([])
+    setSuggestionPicked(false)
   }, [])
 
   function handleTagToggle(tagId: string) {
@@ -80,6 +82,7 @@ export function CaptureForm() {
 
   function handleSuggestionSelect({ name, transaction }: Suggestion) {
     setDescription(name)
+    setSuggestionPicked(true)
 
     if (!selectedCategoryId && transaction.category) {
       setSelectedCategoryId(transaction.category.id)
@@ -179,14 +182,16 @@ export function CaptureForm() {
         <label className="text-sm font-medium">
           {t('capture.description')}
         </label>
-        <DescriptionInput value={description} onChange={setDescription} />
-        <SuggestionChips
-          transactions={transactions}
-          accountId={selectedAccountId}
-          categoryId={selectedCategoryId}
-          description={description}
-          onSelect={handleSuggestionSelect}
-        />
+        <DescriptionInput value={description} onChange={(v) => { setDescription(v); setSuggestionPicked(false) }} />
+        {!suggestionPicked && (
+          <SuggestionChips
+            transactions={transactions}
+            accountId={selectedAccountId}
+            categoryId={selectedCategoryId}
+            description={description}
+            onSelect={handleSuggestionSelect}
+          />
+        )}
       </div>
 
       {showSuccess && (
