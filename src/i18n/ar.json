@@ -24,6 +24,9 @@
   "settings.currencies": "العملات",
   "settings.currencyPlaceholder": "ابحث عن عملة…",
   "settings.language": "اللغة",
+  "settings.themeLight": "الوضع الفاتح",
+  "settings.themeDark": "الوضع الداكن",
+  "settings.themeSystem": "وضع النظام",
 
   "setup.message": "اتصل بخادم Sure لبدء تسجيل المعاملات.",
   "setup.configure": "فتح الإعدادات",

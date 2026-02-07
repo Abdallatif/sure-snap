@@ -24,6 +24,9 @@
   "settings.currencies": "Currencies",
   "settings.currencyPlaceholder": "Search currencies…",
   "settings.language": "Language",
+  "settings.themeLight": "Light mode",
+  "settings.themeDark": "Dark mode",
+  "settings.themeSystem": "System mode",
 
   "setup.message": "Connect to your Sure instance to start capturing transactions.",
   "setup.configure": "Open Settings",

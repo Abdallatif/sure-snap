@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { queryClient, persister } from './lib/queryClient'
+import { ThemeProvider } from './components/theme-provider'
 import { SettingsProvider } from './context/SettingsContext'
 import './i18n'
 import App from './App.tsx'
@@ -9,6 +10,7 @@ import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <ThemeProvider defaultTheme="system" storageKey="suresnap-theme">
     <SettingsProvider>
       <PersistQueryClientProvider
         client={queryClient}
@@ -29,5 +31,6 @@ createRoot(document.getElementById('root')!).render(
         <App />
       </PersistQueryClientProvider>
     </SettingsProvider>
+    </ThemeProvider>
   </StrictMode>,
 )
