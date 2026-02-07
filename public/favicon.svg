@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" ry="96" fill="#22CCEE"/>
+  <rect x="16" y="16" width="480" height="480" rx="80" ry="80" fill="none" stroke="#1BA8C4" stroke-width="8" opacity="0.3"/>
+  <!-- Lightning-dollar unified symbol -->
+  <g fill="#fff">
+    <!-- Top dollar curve (S-curve top half) -->
+    <path d="M296 128c0 0-36-24-80-8s-52 56-32 80c16 19 44 28 64 36" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Bottom dollar curve (S-curve bottom half) -->
+    <path d="M216 384c0 0 36 24 80 8s52-56 32-80c-16-19-44-28-64-36" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Lightning bolt as vertical stroke -->
+    <polygon points="280,72 232,232 288,232 224,440 232,440 296,248 240,248 296,72" fill="#fff"/>
+  </g>
+</svg>
