@@ -40,7 +40,7 @@ export function AccountSelector({
           className={cn(
             'flex h-auto min-h-13 flex-col items-center justify-center gap-0.5 px-3 py-2',
             account.id === selectedAccountId &&
-              'border-primary bg-primary/10 text-primary',
+              'border-primary bg-accent text-accent-foreground dark:bg-accent dark:border-primary',
           )}
         >
           <span className="text-sm font-medium">{account.name}</span>

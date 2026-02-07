@@ -48,13 +48,13 @@ export function CategoryPicker({
             setExpanded(false)
           }}
           className={cn(
-            'flex h-auto min-h-14 flex-col items-center gap-1 px-2 py-2 text-xs',
+            'flex h-auto min-h-16.5 flex-col items-center gap-1 px-2 py-2 text-xs',
             category.id === selectedCategoryId &&
-              'border-primary bg-primary/10',
+              'border-primary bg-accent text-accent-foreground dark:bg-accent dark:border-primary',
           )}
         >
           {category.icon && <LucideIcon name={category.icon} className="size-7" style={{ color: category.color }} />}
-          <span className="w-full truncate text-center">{category.name}</span>
+          <span className="w-full text-center line-clamp-1">{category.name}</span>
         </Button>
       ))}
     </div>

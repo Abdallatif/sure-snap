@@ -30,7 +30,7 @@ export function Header({ onOpenSettings }: HeaderProps) {
   return (
     <header className="flex items-center justify-between border-b px-4 py-3">
       <div className="flex items-center gap-2">
-        <h1 className="text-lg font-semibold">SureSnap</h1>
+        <h1 className="text-lg font-semibold">Sure Snap</h1>
         {status === 'offline' && (
           <Badge variant="outline" className="gap-1 text-xs text-amber-600">
             <WifiOff className="size-3" />
