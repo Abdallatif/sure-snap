@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TagPicker } from './TagPicker'
-import { createWrapper } from '@/test/helpers'
+import { TagPicker } from '../components/TagPicker'
+import { createWrapper } from '@/__tests__/helpers'
 import type { TagDetail } from '@/types'
 
 const tags: TagDetail[] = [

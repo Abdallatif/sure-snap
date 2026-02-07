@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AmountInput } from './AmountInput'
-import { createWrapper } from '@/test/helpers'
+import { AmountInput } from '../components/AmountInput'
+import { createWrapper } from '@/__tests__/helpers'
 
 describe('AmountInput', () => {
   // F1-AC6: amount input auto-focuses on launch

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DescriptionInput } from './DescriptionInput'
-import { createWrapper } from '@/test/helpers'
+import { DescriptionInput } from '../components/DescriptionInput'
+import { createWrapper } from '@/__tests__/helpers'
 
 describe('DescriptionInput', () => {
   it('renders with placeholder text', () => {

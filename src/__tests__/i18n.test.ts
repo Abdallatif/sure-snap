@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import en from './en.json'
-import ar from './ar.json'
+import en from '../i18n/en.json'
+import ar from '../i18n/ar.json'
 
 describe('Internationalization (F8)', () => {
   // F8-AC1: all user-facing strings are externalized

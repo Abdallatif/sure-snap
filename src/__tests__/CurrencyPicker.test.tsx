@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CurrencyPicker } from './CurrencyPicker'
-import { createWrapper } from '@/test/helpers'
+import { CurrencyPicker } from '../components/CurrencyPicker'
+import { createWrapper } from '@/__tests__/helpers'
 
 describe('CurrencyPicker', () => {
   // F5-AC5: manage a list of currencies, stored uppercase, deduplicated

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ConnectionSettings } from './ConnectionSettings'
-import { createWrapper } from '@/test/helpers'
+import { ConnectionSettings } from '../components/ConnectionSettings'
+import { createWrapper } from '@/__tests__/helpers'
 
 beforeEach(() => {
   vi.restoreAllMocks()

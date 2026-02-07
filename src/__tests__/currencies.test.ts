@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getCurrency, searchCurrencies, CURRENCIES } from './currencies'
+import { getCurrency, searchCurrencies, CURRENCIES } from '../lib/currencies'
 
 describe('getCurrency', () => {
   it('returns currency info for a valid code', () => {

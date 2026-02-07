@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { SettingsSheet } from './SettingsSheet'
-import { createWrapper } from '@/test/helpers'
+import { SettingsSheet } from '../components/SettingsSheet'
+import { createWrapper } from '@/__tests__/helpers'
 
 // Mock child components to avoid deep dependency issues
-vi.mock('./ConnectionSettings', () => ({
+vi.mock('../components/ConnectionSettings', () => ({
   ConnectionSettings: () => <div data-testid="connection-settings" />,
 }))
-vi.mock('./AccountsSettings', () => ({
+vi.mock('../components/AccountsSettings', () => ({
   AccountsSettings: () => <div data-testid="accounts-settings" />,
 }))
 

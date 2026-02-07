@@ -6,7 +6,7 @@ import {
   getTags,
   createTransaction,
   ApiRequestError,
-} from './client'
+} from '../api/client'
 
 const config = { backendUrl: 'https://sure.test', apiToken: 'test-token' }
 

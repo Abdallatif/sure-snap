@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
-import App from './App'
-import { renderWithProviders, seedSettings } from '@/test/helpers'
+import App from '../App'
+import { renderWithProviders, seedSettings } from '@/__tests__/helpers'
 
 describe('App', () => {
   // F6-AC1: when not configured, show setup banner instead of capture form

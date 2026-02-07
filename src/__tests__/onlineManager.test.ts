@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { getApiConfig } from './onlineManager'
+import { getApiConfig } from '../lib/onlineManager'
 
 const STORAGE_KEY = 'suresnap-settings'
 

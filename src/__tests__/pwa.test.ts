@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
 // Read vite config source to verify PWA manifest configuration
-const configSource = readFileSync(resolve(__dirname, '../vite.config.ts'), 'utf-8')
+const configSource = readFileSync(resolve(__dirname, '../../vite.config.ts'), 'utf-8')
 
 describe('PWA Manifest (F10)', () => {
   // F10-AC1: valid manifest with name, icons, theme color, display: standalone

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CategoryPicker } from './CategoryPicker'
-import { createWrapper } from '@/test/helpers'
+import { CategoryPicker } from '../components/CategoryPicker'
+import { createWrapper } from '@/__tests__/helpers'
 import type { CategoryDetail } from '@/types'
 
 const categories: CategoryDetail[] = [
