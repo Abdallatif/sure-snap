@@ -2,6 +2,10 @@
 
 A fast, offline-first PWA for capturing transactions on the go. Companion app for [Sure](https://github.com/we-promise/sure).
 
+<p align="center">
+  <img src="screenshots/transaction-form-filled.png" width="300" alt="SureSnap transaction form">
+</p>
+
 ## Features
 
 - **Quick capture** — log amount, merchant, and category in minimal taps
@@ -72,6 +76,19 @@ When running via Docker, set `SURE_API_UPSTREAM` to enable the built-in reverse 
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `SURE_API_UPSTREAM` | Sure API base URL (optional) | `http://sure:3000` |
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/transaction-form-empty.png" width="180">&nbsp;&nbsp;
+  <img src="screenshots/transaction-form-filled.png" width="180">&nbsp;&nbsp;
+  <img src="screenshots/settings-drawer.png" width="180">&nbsp;&nbsp;
+  <img src="screenshots/offline-indicator.png" width="180">&nbsp;&nbsp;
+  <img src="screenshots/server-unreachable.png" width="180">
+</p>
+<p align="center">
+  <em>Transaction form · Filled form · Settings · Offline mode · Server unreachable</em>
+</p>
 
 ## Contributing
 
