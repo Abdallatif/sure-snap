@@ -1,0 +1,11 @@
+node_modules
+.git
+dist
+.yarn/install-state.gz
+.yarn/unplugged
+.pnp.*
+sure-docs
+ai-docs
+.claude
+.vscode
+*.md

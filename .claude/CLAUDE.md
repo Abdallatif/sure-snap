@@ -47,3 +47,14 @@ When working with shadcn/ui components, use **logical CSS properties** instead o
 - For directional animations (e.g. slide), use `ltr:` and `rtl:` variant prefixes to flip direction
 
 Reference: [shadcn RTL docs](https://ui.shadcn.com/docs/rtl)
+
+## Releasing a New Version
+
+Image: `ghcr.io/abdallatifsulaiman/sure-snap` (built by `.github/workflows/docker.yml`)
+
+1. Bump the `version` field in `package.json`
+2. Commit: `git commit -am "release v<version>"`
+3. Tag: `git tag v<version>`
+4. Push both: `git push origin main --tags`
+
+The workflow auto-publishes `:<version>`, `:<major>.<minor>`, and `:latest`.
