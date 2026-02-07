@@ -1,0 +1,36 @@
+{
+  "capture.amount": "Amount",
+  "capture.amountPlaceholder": "0.00",
+  "capture.category": "Category",
+  "capture.selectCategory": "Select category",
+  "capture.description": "Description",
+  "capture.descriptionPlaceholder": "What was this for?",
+  "capture.submit": "Save Transaction",
+  "capture.success": "Transaction saved",
+  "capture.back": "Back",
+
+  "settings.title": "Settings",
+  "settings.backendUrl": "Backend URL",
+  "settings.backendUrlPlaceholder": "https://app.sure.am",
+  "settings.apiToken": "API Token",
+  "settings.apiTokenPlaceholder": "Enter your API token",
+  "settings.showToken": "Show",
+  "settings.hideToken": "Hide",
+  "settings.testConnection": "Test Connection",
+  "settings.connectionSuccess": "Connected successfully",
+  "settings.connectionFailed": "Connection failed",
+  "settings.accounts": "Accounts",
+  "settings.language": "Language",
+
+  "setup.message": "Connect to your Sure instance to start capturing transactions.",
+  "setup.configure": "Open Settings",
+
+  "common.save": "Save",
+  "common.cancel": "Cancel",
+  "common.close": "Close",
+  "common.success": "Success",
+  "common.error": "Error",
+  "common.offline": "Offline",
+  "common.pendingSync": "Pending sync",
+  "common.loading": "Loading…"
+}

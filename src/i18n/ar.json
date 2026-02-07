@@ -1,0 +1,36 @@
+{
+  "capture.amount": "المبلغ",
+  "capture.amountPlaceholder": "0.00",
+  "capture.category": "الفئة",
+  "capture.selectCategory": "اختر فئة",
+  "capture.description": "الوصف",
+  "capture.descriptionPlaceholder": "ما الغرض من هذا؟",
+  "capture.submit": "حفظ المعاملة",
+  "capture.success": "تم حفظ المعاملة",
+  "capture.back": "رجوع",
+
+  "settings.title": "الإعدادات",
+  "settings.backendUrl": "رابط الخادم",
+  "settings.backendUrlPlaceholder": "https://app.sure.am",
+  "settings.apiToken": "مفتاح API",
+  "settings.apiTokenPlaceholder": "أدخل مفتاح API",
+  "settings.showToken": "إظهار",
+  "settings.hideToken": "إخفاء",
+  "settings.testConnection": "اختبار الاتصال",
+  "settings.connectionSuccess": "تم الاتصال بنجاح",
+  "settings.connectionFailed": "فشل الاتصال",
+  "settings.accounts": "الحسابات",
+  "settings.language": "اللغة",
+
+  "setup.message": "اتصل بخادم Sure لبدء تسجيل المعاملات.",
+  "setup.configure": "فتح الإعدادات",
+
+  "common.save": "حفظ",
+  "common.cancel": "إلغاء",
+  "common.close": "إغلاق",
+  "common.success": "نجاح",
+  "common.error": "خطأ",
+  "common.offline": "غير متصل",
+  "common.pendingSync": "بانتظار المزامنة",
+  "common.loading": "جارٍ التحميل…"
+}

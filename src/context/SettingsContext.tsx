@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import i18n from '../i18n'
 
 export interface Settings {
   backendUrl: string
@@ -60,6 +61,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   // Apply language on mount and when it changes
   useEffect(() => {
     applyLanguage(settings.language)
+    i18n.changeLanguage(settings.language)
   }, [settings.language])
 
   // Persist to localStorage on every change

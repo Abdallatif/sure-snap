@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { queryClient, persister } from './lib/queryClient'
 import { SettingsProvider } from './context/SettingsContext'
+import './i18n'
 import App from './App.tsx'
 import './index.css'
 
