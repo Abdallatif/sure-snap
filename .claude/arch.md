@@ -250,10 +250,11 @@ API requests (`/api/v1/*`) are **not** cached by the service worker. TanStack Qu
 
 ```ts
 interface Settings {
-  backendUrl: string          // e.g. "https://app.sure.am"
-  apiToken: string            // X-Api-Key value
+  backendUrl: string              // e.g. "https://app.sure.am"
+  apiToken: string                // X-Api-Key value
   language: 'en' | 'ar'
-  enabledAccountIds: string[] // accounts visible in AccountSelector
+  enabledAccountIds: string[]     // accounts visible in AccountSelector
+  lastUsedAccountId: string|null  // auto-set on submit, not shown in settings sheet
 }
 
 // Derived
@@ -263,6 +264,7 @@ isConfigured: boolean         // backendUrl && apiToken both non-empty
 - Persisted to localStorage on every change
 - Loaded from localStorage on app init
 - When `!isConfigured`, the app shows SetupBanner instead of CaptureForm
+- `lastUsedAccountId` is managed automatically (set on transaction submit, read by AccountSelector for pre-selection) — not exposed in the Settings Sheet
 
 ## i18n
 

@@ -21,10 +21,11 @@ SureSnap is a PWA companion app for [Sure](https://github.com/we-promise/sure) t
 ## Development Commands
 
 ```bash
-npm install      # Install dependencies
-npm run dev      # Start dev server
-npm run build    # Production build
-npm run preview  # Preview production build
+yarn install          # Install dependencies
+yarn dev              # Start dev server
+yarn build            # Production build
+yarn preview          # Preview production build
+yarn tsc --noEmit     # Type-check (no npx — typescript is a devDependency)
 ```
 
 ## Conventions
