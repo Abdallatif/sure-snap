@@ -70,9 +70,9 @@ describe('CategoryPicker', () => {
     // it won't auto-collapse. The collapse happens internally on click.
     // Let's test the collapsed view by triggering a selection.
     // Actually the component uses internal state, so we need to click to collapse.
-    // Since expanded defaults to true, we see the grid even with selectedCategoryId set.
+    // useEffect collapses the picker when selectedCategoryId is set,
+    // so the collapsed badge view is rendered instead of the grid.
     expect(screen.getByText('Food')).toBeInTheDocument()
-    expect(container.querySelector('.grid-cols-2')).toBeInTheDocument()
   })
 
   // F3-AC3: tapping collapsed chip re-expands

@@ -32,9 +32,9 @@ describe('App', () => {
   })
 
   // F1-AC1: capture screen is the first and only screen on launch
-  it('shows header with SureSnap title', () => {
+  it('shows header with Sure Snap title', () => {
     renderWithProviders(<App />)
-    expect(screen.getByText('SureSnap')).toBeInTheDocument()
+    expect(screen.getByText('Sure Snap')).toBeInTheDocument()
   })
 
   // F5-AC1: settings gear icon in header

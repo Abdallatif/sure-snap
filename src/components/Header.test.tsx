@@ -22,11 +22,11 @@ import { useConnectionStatus } from '../hooks/useOnlineStatus'
 import { useMutationState } from '@tanstack/react-query'
 
 describe('Header', () => {
-  it('displays the SureSnap title', () => {
+  it('displays the Sure Snap title', () => {
     render(<Header onOpenSettings={() => {}} />, {
       wrapper: createWrapper(),
     })
-    expect(screen.getByText('SureSnap')).toBeInTheDocument()
+    expect(screen.getByText('Sure Snap')).toBeInTheDocument()
   })
 
   it('calls onOpenSettings when gear icon is clicked', async () => {
