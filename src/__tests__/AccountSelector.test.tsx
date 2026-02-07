@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AccountSelector } from '../components/AccountSelector'
+import { AccountSelector } from '../components/capture/AccountSelector'
 import { createWrapper } from '@/__tests__/helpers'
 import type { AccountDetail } from '@/types'
 

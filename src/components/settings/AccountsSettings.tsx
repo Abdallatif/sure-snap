@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Label } from './ui/label'
-import { Switch } from './ui/switch'
+import { Label } from '../ui/label'
+import { Switch } from '../ui/switch'
 import { useSettings } from '@/context/SettingsContext'
 import { useAccounts } from '@/hooks/useAccounts'
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import type { Transaction } from '@/types'
 
 export interface Suggestion {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AmountInput } from '../components/AmountInput'
+import { AmountInput } from '../components/capture/AmountInput'
 import { createWrapper } from '@/__tests__/helpers'
 
 describe('AmountInput', () => {

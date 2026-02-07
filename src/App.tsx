@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CaptureForm } from './components/CaptureForm'
-import { Header } from './components/Header'
-import { SetupBanner } from './components/SetupBanner'
-import { SettingsSheet } from './components/SettingsSheet'
+import { CaptureForm } from './components/capture/CaptureForm'
+import { Header } from './components/layout/Header'
+import { SetupBanner } from './components/layout/SetupBanner'
+import { SettingsSheet } from './components/settings/SettingsSheet'
 import {
   Sheet,
   SheetContent,

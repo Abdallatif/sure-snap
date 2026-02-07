@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
+import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
 
 interface AmountInputProps {
   value: string

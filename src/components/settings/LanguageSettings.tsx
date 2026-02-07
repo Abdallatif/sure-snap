@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from './ui/button'
-import { Label } from './ui/label'
+import { Button } from '../ui/button'
+import { Label } from '../ui/label'
 import { useSettings } from '@/context/SettingsContext'
 
 export function LanguageSettings() {

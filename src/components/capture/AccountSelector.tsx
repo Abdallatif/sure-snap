@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
 import type { AccountDetail } from '@/types'
 

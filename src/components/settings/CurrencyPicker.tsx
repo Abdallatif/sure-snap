@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import { searchCurrencies, getCurrency } from '@/lib/currencies'
 
 interface CurrencyPickerProps {

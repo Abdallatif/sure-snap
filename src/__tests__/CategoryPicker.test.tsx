@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CategoryPicker } from '../components/CategoryPicker'
+import { CategoryPicker } from '../components/capture/CategoryPicker'
 import { createWrapper } from '@/__tests__/helpers'
 import type { CategoryDetail } from '@/types'
 

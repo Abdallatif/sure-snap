@@ -12,7 +12,7 @@ import { CategoryPicker } from './CategoryPicker'
 import { DescriptionInput } from './DescriptionInput'
 import { SuggestionChips, type Suggestion } from './SuggestionChips'
 import { TagPicker } from './TagPicker'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 
 export function CaptureForm() {
   const { t } = useTranslation()

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SuggestionChips } from '../components/SuggestionChips'
+import { SuggestionChips } from '../components/capture/SuggestionChips'
 import { createWrapper } from '@/__tests__/helpers'
 import type { Transaction } from '@/types'
 

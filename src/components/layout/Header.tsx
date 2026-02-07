@@ -1,10 +1,10 @@
 import { useMutationState } from '@tanstack/react-query'
 import { Loader2, Moon, ServerOff, Settings, Sun, SunMoon, WifiOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useConnectionStatus } from '../hooks/useOnlineStatus'
-import { useTheme } from './theme-provider'
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
+import { useConnectionStatus } from '../../hooks/useOnlineStatus'
+import { useTheme } from '../theme-provider'
+import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
 
 interface HeaderProps {
   onOpenSettings: () => void

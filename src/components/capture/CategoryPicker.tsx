@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Button } from './ui/button'
-import { Badge } from './ui/badge'
-import { LucideIcon } from './LucideIcon'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { LucideIcon } from '../LucideIcon'
 import { cn } from '@/lib/utils'
 import type { CategoryDetail } from '@/types'
 

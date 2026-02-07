@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 import { useSettings } from '@/context/SettingsContext'
 import { getAccounts } from '@/api/client'
 

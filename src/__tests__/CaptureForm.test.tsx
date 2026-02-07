@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { CaptureForm } from '../components/CaptureForm'
+import { CaptureForm } from '../components/capture/CaptureForm'
 import { createWrapper, seedSettings } from '@/__tests__/helpers'
 import type { AccountDetail, CategoryDetail, Transaction, TagDetail } from '@/types'
 
