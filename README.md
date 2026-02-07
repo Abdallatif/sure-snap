@@ -1,96 +1,82 @@
 # SureSnap
 
-A Progressive Web App companion for [Sure](https://github.com/we-promise/sure) that enables quick transaction capture with offline support.
-
-## About
-
-SureSnap is a lightweight, mobile-first capture tool designed to log expenses on the go. It prioritizes speed to entry — get in, record a transaction, and get out. Transactions are queued locally and synced to the Sure API when connectivity is available.
+A fast, offline-first PWA for capturing transactions on the go. Companion app for [Sure](https://github.com/we-promise/sure).
 
 ## Features
 
-- **Quick transaction entry** — amount, merchant, and category in minimal taps
-- **Offline-first** — works without internet; syncs when back online via background queue
+- **Quick capture** — log amount, merchant, and category in minimal taps
+- **Offline-first** — works without internet; syncs when back online
 - **Bilingual** — English and Arabic with full RTL support
-- **PWA** — installable on mobile with service worker caching
+- **Installable** — add to home screen on any device via PWA
 
-## Tech Stack
+## Installation
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 19 + Vite 7 |
-| Language | TypeScript 5.9 |
-| UI | shadcn/ui (Radix UI primitives) |
-| Styling | Tailwind CSS v4 |
-| Server State | TanStack Query v5 |
-| Local Storage | IndexedDB (idb-keyval) + localStorage |
-| i18n | i18next + react-i18next |
-| PWA | vite-plugin-pwa (Workbox) |
-| Package Manager | Yarn 4 |
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- Yarn 4 (`corepack enable`)
-
-### Install
+### Docker (recommended)
 
 ```bash
+docker run -d -p 9052:9052 ghcr.io/abdallatif/sure-snap:latest
+```
+
+To proxy API requests to your Sure instance:
+
+```bash
+docker run -d -p 9052:9052 \
+  -e SURE_API_UPSTREAM=http://your-sure-host:3000 \
+  ghcr.io/abdallatif/sure-snap:latest
+```
+
+Open `http://localhost:9052` in your browser.
+
+### Docker Compose
+
+Create a `docker-compose.yml`:
+
+```yaml
+services:
+  sure-snap:
+    image: ghcr.io/abdallatif/sure-snap:latest
+    ports:
+      - 9052:9052
+    environment:
+      - SURE_API_UPSTREAM=http://sure:3000 # optional
+```
+
+```bash
+docker compose up -d
+```
+
+### Build from source
+
+Requires Node.js 18+ and Yarn 4.
+
+```bash
+git clone https://github.com/abdallatif/sure-snap.git
+cd sure-snap
+corepack enable
 yarn install
-```
-
-### Development
-
-```bash
-yarn dev
-```
-
-Opens at `http://localhost:5173`.
-
-### Build
-
-```bash
 yarn build
 ```
 
-### Preview
+The built files are in `dist/`. Serve them with any static file server — for example:
 
 ```bash
-yarn preview
+yarn preview   # serves at http://localhost:4173
 ```
 
-### Lint
+## Configuration
 
-```bash
-yarn lint
-```
+SureSnap connects to a Sure API backend. Configure the connection in the app's settings screen (API URL and auth token).
 
-## API Integration
+When running via Docker, set `SURE_API_UPSTREAM` to enable the built-in reverse proxy so the browser talks to the same origin:
 
-SureSnap connects to a [Sure](https://github.com/we-promise/sure) backend instance:
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `SURE_API_UPSTREAM` | Sure API base URL (optional) | `http://sure:3000` |
 
-- **Endpoint**: `/api/v1/transactions`
-- **Auth**: API key or OAuth token (configured in app settings)
-- **Sync strategy**: Transactions are stored locally in IndexedDB and pushed to the API when online. TanStack Query handles mutation persistence and retry.
+## Contributing
 
-API documentation is available in [`sure-docs/api/`](sure-docs/api/).
-
-## Architecture
-
-```
-SettingsContext.Provider (localStorage)
-└── PersistQueryClientProvider (IndexedDB)
-    └── App
-        ├── Header
-        ├── SetupBanner / CaptureForm
-        └── SettingsSheet
-```
-
-- **No router** — single capture screen with a settings overlay
-- **Offline data** — TanStack Query persists API cache to IndexedDB; service worker caches static assets only
-- **Optimistic updates** — transactions appear immediately in the UI before server confirmation
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
-See [Sure](https://github.com/we-promise/sure) for licensing details.
+[MIT](LICENSE)

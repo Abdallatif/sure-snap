@@ -50,7 +50,7 @@ Reference: [shadcn RTL docs](https://ui.shadcn.com/docs/rtl)
 
 ## Releasing a New Version
 
-Image: `ghcr.io/abdallatifsulaiman/sure-snap` (built by `.github/workflows/docker.yml`)
+Image: `ghcr.io/abdallatif/sure-snap` (built by `.github/workflows/docker.yml`)
 
 1. Bump the `version` field in `package.json`
 2. Commit: `git commit -am "release v<version>"`
