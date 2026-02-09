@@ -25,6 +25,6 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh && mkdir -p /etc/nginx/snippets
 
-EXPOSE 9052
+EXPOSE 9052 9053
 
 ENTRYPOINT ["/entrypoint.sh"]

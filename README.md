@@ -18,18 +18,31 @@ A fast, offline-first PWA for capturing transactions on the go. Companion app fo
 ### Docker (recommended)
 
 ```bash
-docker run -d -p 9052:9052 ghcr.io/abdallatif/sure-snap:latest
+docker run -d -p 9052:9052 -p 9053:9053 ghcr.io/abdallatif/sure-snap:latest
 ```
 
 To proxy API requests to your Sure instance:
 
 ```bash
-docker run -d -p 9052:9052 \
+docker run -d -p 9052:9052 -p 9053:9053 \
   -e SURE_API_UPSTREAM=http://your-sure-host:3000 \
   ghcr.io/abdallatif/sure-snap:latest
 ```
 
 Open `http://localhost:9052` in your browser.
+
+#### HTTPS (required for PWA / service worker)
+
+Service workers require a secure context. Mount TLS certificates to enable HTTPS on port 9053:
+
+```bash
+docker run -d -p 9053:9053 \
+  -v /path/to/tls.crt:/etc/nginx/certs/tls.crt:ro \
+  -v /path/to/tls.key:/etc/nginx/certs/tls.key:ro \
+  ghcr.io/abdallatif/sure-snap:latest
+```
+
+Open `https://your-host:9053`. Without certs, the container serves HTTP-only on port 9052 (PWA features will only work on `localhost`).
 
 ### Docker Compose
 
@@ -41,8 +54,12 @@ services:
     image: ghcr.io/abdallatif/sure-snap:latest
     ports:
       - 9052:9052
+      - 9053:9053
     environment:
       - SURE_API_UPSTREAM=http://sure:3000 # optional
+    volumes:
+      - ./certs/tls.crt:/etc/nginx/certs/tls.crt:ro  # optional
+      - ./certs/tls.key:/etc/nginx/certs/tls.key:ro  # optional
 ```
 
 ```bash
@@ -73,9 +90,11 @@ SureSnap connects to a Sure API backend. Configure the connection in the app's s
 
 When running via Docker, set `SURE_API_UPSTREAM` to enable the built-in reverse proxy so the browser talks to the same origin:
 
-| Variable | Description | Example |
+| Variable / Volume | Description | Example |
 |----------|-------------|---------|
 | `SURE_API_UPSTREAM` | Sure API base URL (optional) | `http://sure:3000` |
+| `/etc/nginx/certs/tls.crt` | TLS certificate (optional, enables HTTPS on :9053) | bind-mount |
+| `/etc/nginx/certs/tls.key` | TLS private key (optional) | bind-mount |
 
 ## Screenshots
 

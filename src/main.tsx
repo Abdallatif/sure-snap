@@ -8,6 +8,9 @@ import './i18n'
 import App from './App.tsx'
 import './index.css'
 
+// Ask the browser to keep our caches (reduces iOS eviction risk)
+navigator.storage?.persist?.()
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="suresnap-theme">
