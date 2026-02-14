@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TransferForm } from '../components/capture/TransferForm'
-import { createWrapper } from '@/__tests__/helpers'
-import type { AccountDetail } from '@/types'
+import { createWrapper } from './helpers'
+import type { AccountDetail } from '../types'
 
 const mockAccounts: AccountDetail[] = [
   { id: 'a1', name: 'Cash', balance: '100', currency: 'USD', classification: 'asset', account_type: 'depository' },

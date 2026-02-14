@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SetupBanner } from '../components/layout/SetupBanner'
-import { createWrapper } from '@/__tests__/helpers'
+import { createWrapper } from './helpers'
 
 describe('SetupBanner', () => {
   // F6-AC2: banner has clear message and button to open settings

@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CaptureForm } from '../components/capture/CaptureForm'
-import { createWrapper, seedSettings } from '@/__tests__/helpers'
-import type { AccountDetail, CategoryDetail, Transaction, TagDetail } from '@/types'
+import { createWrapper, seedSettings } from './helpers'
+import type { AccountDetail, CategoryDetail, Transaction, TagDetail } from '../types'
 
 // Mock hooks to return controlled data
 const mockAccounts: AccountDetail[] = [

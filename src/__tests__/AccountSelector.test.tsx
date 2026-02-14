@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AccountSelector } from '../components/capture/AccountSelector'
-import { createWrapper } from '@/__tests__/helpers'
-import type { AccountDetail } from '@/types'
+import { createWrapper } from './helpers'
+import type { AccountDetail } from '../types'
 
 const accounts: AccountDetail[] = [
   { id: '1', name: 'Cash', balance: '100', currency: 'USD', classification: 'asset', account_type: 'depository' },

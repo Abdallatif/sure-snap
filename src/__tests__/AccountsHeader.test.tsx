@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AccountsHeader } from '../components/capture/AccountsHeader'
-import { createWrapper } from '@/__tests__/helpers'
+import { createWrapper } from './helpers'
 
 describe('AccountsHeader', () => {
   it('shows "Accounts" label when transferMode is false', () => {

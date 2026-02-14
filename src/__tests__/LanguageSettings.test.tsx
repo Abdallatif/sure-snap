@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LanguageSettings } from '../components/settings/LanguageSettings'
-import { createWrapper } from '@/__tests__/helpers'
+import { createWrapper } from './helpers'
 
 describe('LanguageSettings', () => {
   // F8-AC2: English is default

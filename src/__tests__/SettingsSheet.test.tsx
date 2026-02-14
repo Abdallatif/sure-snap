@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { SettingsSheet } from '../components/settings/SettingsSheet'
-import { createWrapper } from '@/__tests__/helpers'
+import { createWrapper } from './helpers'
 
 // Mock child components to avoid deep dependency issues
 vi.mock('../components/settings/ConnectionSettings', () => ({
