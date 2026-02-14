@@ -7,6 +7,7 @@ interface AccountSelectorProps {
   accounts: AccountDetail[]
   enabledAccountIds: string[]
   selectedAccountId: string | null
+  disabledAccountId?: string | null
   onSelect: (accountId: string) => void
 }
 
@@ -14,6 +15,7 @@ export function AccountSelector({
   accounts,
   enabledAccountIds,
   selectedAccountId,
+  disabledAccountId,
   onSelect,
 }: AccountSelectorProps) {
   const { t } = useTranslation()
@@ -32,15 +34,19 @@ export function AccountSelector({
 
   return (
     <div className="grid grid-cols-2 gap-2">
-      {enabledAccounts.map((account) => (
+      {enabledAccounts.map((account) => {
+        const isDisabled = account.id === disabledAccountId
+        return (
         <Button
           key={account.id}
           variant="outline"
+          disabled={isDisabled}
           onClick={() => onSelect(account.id)}
           className={cn(
             'flex h-auto min-h-13 flex-col items-center justify-center gap-0.5 px-3 py-2',
             account.id === selectedAccountId &&
               'border-primary bg-accent text-accent-foreground dark:bg-accent dark:border-primary',
+            isDisabled && 'opacity-40',
           )}
         >
           <span className="text-sm font-medium">{account.name}</span>
@@ -48,7 +54,8 @@ export function AccountSelector({
             {account.currency}
           </span>
         </Button>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -57,7 +57,7 @@ const defaultSettings = {
 describe('CaptureForm', () => {
   // F1-AC2: form includes account selector, amount, category, description
   it('renders all form fields', () => {
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     // Account buttons
@@ -76,7 +76,7 @@ describe('CaptureForm', () => {
 
   // F1-AC7: all fields except description are required before submit is enabled
   it('disables submit when no account is selected', () => {
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     expect(screen.getByRole('button', { name: /save transaction/i })).toBeDisabled()
@@ -84,7 +84,7 @@ describe('CaptureForm', () => {
 
   it('disables submit when no amount is entered', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     // Select account
@@ -97,7 +97,7 @@ describe('CaptureForm', () => {
 
   it('disables submit when no category is selected', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     // Select account
@@ -110,7 +110,7 @@ describe('CaptureForm', () => {
 
   it('enables submit when account, amount, and category are set', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     await user.click(screen.getByText('Cash'))
@@ -122,7 +122,7 @@ describe('CaptureForm', () => {
   // F1-AC5: submitting clears form and shows success
   it('clears form and shows success on submit', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     await user.click(screen.getByText('Cash'))
@@ -141,7 +141,7 @@ describe('CaptureForm', () => {
   // F1-AC4: transaction nature defaults to expense
   it('submits with nature=expense', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     await user.click(screen.getByText('Cash'))
@@ -162,7 +162,7 @@ describe('CaptureForm', () => {
   // F1-AC3: date auto-set to current date
   it('submits with today\'s date', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     await user.click(screen.getByText('Cash'))
@@ -179,7 +179,7 @@ describe('CaptureForm', () => {
   // F2-AC6: changing account updates default currency
   it('updates currency when account is selected', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({ settings: defaultSettings }),
     })
     // Select Bank (EUR)
@@ -196,7 +196,7 @@ describe('CaptureForm', () => {
 
   // F9-AC7: tag picker hidden when showTags is false
   it('hides tag picker when showTags is false', () => {
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({
         settings: { ...defaultSettings, showTags: false },
       }),
@@ -206,7 +206,7 @@ describe('CaptureForm', () => {
 
   // F9-AC7: tag picker shown when showTags is true
   it('shows tag picker when showTags is true', () => {
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({
         settings: { ...defaultSettings, showTags: true },
       }),
@@ -217,7 +217,7 @@ describe('CaptureForm', () => {
   // F9-AC9: tags cleared on form reset
   it('clears tags on submit', async () => {
     const user = userEvent.setup()
-    render(<CaptureForm />, {
+    render(<CaptureForm onToggleTransfer={() => {}} />, {
       wrapper: createWrapper({
         settings: { ...defaultSettings, showTags: true },
       }),

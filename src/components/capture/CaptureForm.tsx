@@ -6,6 +6,7 @@ import { useCategories } from '@/hooks/useCategories'
 import { useTransactions } from '@/hooks/useTransactions'
 import { useCreateTransaction } from '@/hooks/useCreateTransaction'
 import { useTags } from '@/hooks/useTags'
+import { AccountsHeader } from './AccountsHeader'
 import { AccountSelector } from './AccountSelector'
 import { AmountInput } from './AmountInput'
 import { CategoryPicker } from './CategoryPicker'
@@ -14,7 +15,11 @@ import { SuggestionChips, type Suggestion } from './SuggestionChips'
 import { TagPicker } from './TagPicker'
 import { Button } from '../ui/button'
 
-export function CaptureForm() {
+interface CaptureFormProps {
+  onToggleTransfer: (pressed: boolean) => void
+}
+
+export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const { t } = useTranslation()
   const { enabledAccountIds, lastUsedAccountId, currencies, showTags, updateSettings } =
     useSettings()
@@ -140,6 +145,11 @@ export function CaptureForm() {
 
   return (
     <div className="flex flex-col gap-6">
+      <AccountsHeader
+        transferMode={false}
+        onToggleTransfer={onToggleTransfer}
+      />
+
       <AccountSelector
         accounts={accounts}
         enabledAccountIds={enabledAccountIds}

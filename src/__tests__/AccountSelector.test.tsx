@@ -76,6 +76,41 @@ describe('AccountSelector', () => {
     expect(container.querySelector('.grid-cols-2')).toBeInTheDocument()
   })
 
+  it('disables the account matching disabledAccountId', () => {
+    render(
+      <AccountSelector
+        accounts={accounts}
+        enabledAccountIds={['1', '2']}
+        selectedAccountId={null}
+        disabledAccountId="2"
+        onSelect={() => {}}
+      />,
+      { wrapper: createWrapper() },
+    )
+    const bankButton = screen.getByText('Bank').closest('button')!
+    expect(bankButton).toBeDisabled()
+    // Cash should still be enabled
+    const cashButton = screen.getByText('Cash').closest('button')!
+    expect(cashButton).toBeEnabled()
+  })
+
+  it('does not call onSelect for disabled account', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    render(
+      <AccountSelector
+        accounts={accounts}
+        enabledAccountIds={['1', '2']}
+        selectedAccountId={null}
+        disabledAccountId="1"
+        onSelect={onSelect}
+      />,
+      { wrapper: createWrapper() },
+    )
+    await user.click(screen.getByText('Cash'))
+    expect(onSelect).not.toHaveBeenCalled()
+  })
+
   it('shows "no accounts" message when no accounts are enabled', () => {
     render(
       <AccountSelector

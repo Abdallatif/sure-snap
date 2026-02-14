@@ -8,6 +8,10 @@ interface AmountInputProps {
   currencies: string[]
   onChangeAmount: (value: string) => void
   onChangeCurrency: (currency: string) => void
+  label?: string
+  id?: string
+  autoFocus?: boolean
+  compact?: boolean
 }
 
 export function AmountInput({
@@ -16,24 +20,28 @@ export function AmountInput({
   currencies,
   onChangeAmount,
   onChangeCurrency,
+  label,
+  id = 'amount-input',
+  autoFocus = true,
+  compact = false,
 }: AmountInputProps) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    if (autoFocus) inputRef.current?.focus()
+  }, [autoFocus])
 
   return (
     <div className="flex flex-col items-center gap-3">
       <label
-        htmlFor="amount-input"
+        htmlFor={id}
         className="text-sm font-medium text-muted-foreground"
       >
-        {t('capture.amount')}
+        {label ?? t('capture.amount')}
       </label>
       <input
-        id="amount-input"
+        id={id}
         ref={inputRef}
         type="text"
         inputMode="decimal"
@@ -45,7 +53,7 @@ export function AmountInput({
             onChangeAmount(v)
           }
         }}
-        className="w-full border-0 bg-transparent text-center text-5xl font-light outline-none placeholder:text-muted-foreground/40"
+        className={`w-full border-0 bg-transparent text-center font-light outline-none placeholder:text-muted-foreground/40 ${compact ? 'text-3xl' : 'text-5xl'}`}
       />
       {currencies.length > 0 && (
         <ToggleGroup
