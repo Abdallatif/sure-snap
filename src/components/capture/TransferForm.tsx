@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sileo } from 'sileo'
 import { ArrowRight } from 'lucide-react'
 import { useSettings } from '@/context/SettingsContext'
 import { useAccounts } from '@/hooks/useAccounts'
@@ -28,8 +29,6 @@ export function TransferForm({ onToggleTransfer }: TransferFormProps) {
   const [selectedCurrency, setSelectedCurrency] = useState('')
   const [destinationAmount, setDestinationAmount] = useState('')
   const [description, setDescription] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [transferError, setTransferError] = useState<string | null>(null)
 
   // Pre-select lastUsedAccountId when accounts load
   useEffect(() => {
@@ -80,49 +79,31 @@ export function TransferForm({ onToggleTransfer }: TransferFormProps) {
     if (!canSubmit || !selectedAccountId || !destinationAccountId || !sourceAccount || !destAccount)
       return
 
-    setTransferError(null)
     updateSettings({ lastUsedAccountId: selectedAccountId })
 
-    transfer.mutate(
-      {
-        sourceAccountId: selectedAccountId,
-        sourceAccountName: sourceAccount.name,
-        destinationAccountId,
-        destinationAccountName: destAccount.name,
-        amount: parseFloat(amount),
-        sourceCurrency: selectedCurrency,
-        destinationAmount: isCrossCurrency ? parseFloat(destinationAmount) : undefined,
-        destinationCurrency: isCrossCurrency ? destAccount.currency : undefined,
-        description: description || undefined,
+    const input = {
+      sourceAccountId: selectedAccountId,
+      sourceAccountName: sourceAccount.name,
+      destinationAccountId,
+      destinationAccountName: destAccount.name,
+      amount: parseFloat(amount),
+      sourceCurrency: selectedCurrency,
+      destinationAmount: isCrossCurrency ? parseFloat(destinationAmount) : undefined,
+      destinationCurrency: isCrossCurrency ? destAccount.currency : undefined,
+      description: description || undefined,
+    }
+
+    sileo.promise(transfer.mutateAsync(input), {
+      loading: { title: t('common.loading') },
+      success: { title: t('capture.transferSuccess') },
+      error: (err) => {
+        if (err instanceof PartialTransferError) {
+          return { title: t('capture.transferPartialError'), duration: null }
+        }
+        return { title: t('capture.transferError'), duration: 5000 }
       },
-      {
-        onSuccess: () => {
-          resetForm()
-          setShowSuccess(true)
-          setTransferError(null)
-        },
-        onError: (err) => {
-          if (err instanceof PartialTransferError) {
-            setTransferError(t('capture.transferPartialError'))
-          } else {
-            setTransferError(t('capture.transferError'))
-          }
-        },
-      },
-    )
+    }).then(() => resetForm()).catch(() => {})
   }
-
-  // Auto-hide success message
-  useEffect(() => {
-    if (!showSuccess) return
-    const timer = setTimeout(() => setShowSuccess(false), 2000)
-    return () => clearTimeout(timer)
-  }, [showSuccess])
-
-  // Clear error when inputs change
-  useEffect(() => {
-    setTransferError(null)
-  }, [selectedAccountId, destinationAccountId, amount, destinationAmount])
 
   return (
     <div className="flex flex-col gap-6">
@@ -198,18 +179,6 @@ export function TransferForm({ onToggleTransfer }: TransferFormProps) {
         <label className="text-sm font-medium">{t('capture.note')}</label>
         <DescriptionInput value={description} onChange={setDescription} />
       </div>
-
-      {showSuccess && (
-        <p className="text-center text-sm font-medium text-green-600">
-          {t('capture.transferSuccess')}
-        </p>
-      )}
-
-      {transferError && (
-        <p className="text-center text-sm font-medium text-destructive">
-          {transferError}
-        </p>
-      )}
 
       <Button
         size="lg"

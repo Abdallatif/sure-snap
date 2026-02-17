@@ -1,9 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { sileo } from 'sileo'
 import { CaptureForm } from '../components/capture/CaptureForm'
 import { createWrapper, seedSettings } from './helpers'
 import type { AccountDetail, CategoryDetail, Transaction, TagDetail } from '../types'
+
+vi.mock('sileo', () => ({
+  sileo: {
+    success: vi.fn(),
+    error: vi.fn(),
+    warning: vi.fn(),
+    promise: vi.fn((p: Promise<unknown>) => p),
+  },
+}))
 
 // Mock hooks to return controlled data
 const mockAccounts: AccountDetail[] = [
@@ -21,7 +31,7 @@ const mockTags: TagDetail[] = [
   { id: 't1', name: 'Urgent', color: '#ff0000', created_at: '', updated_at: '' },
 ]
 
-const mockMutate = vi.fn()
+const mockMutateAsync = vi.fn(() => Promise.resolve())
 
 vi.mock('@/hooks/useAccounts', () => ({
   useAccounts: () => ({ data: mockAccounts }),
@@ -37,14 +47,15 @@ vi.mock('@/hooks/useTags', () => ({
 }))
 vi.mock('@/hooks/useCreateTransaction', () => ({
   useCreateTransaction: () => ({
-    mutate: mockMutate,
+    mutateAsync: mockMutateAsync,
     isPending: false,
     isPaused: false,
   }),
 }))
 
 beforeEach(() => {
-  mockMutate.mockClear()
+  mockMutateAsync.mockClear()
+  vi.mocked(sileo.promise).mockClear()
 })
 
 const defaultSettings = {
@@ -130,12 +141,17 @@ describe('CaptureForm', () => {
     await user.click(screen.getByText('Food'))
     await user.click(screen.getByRole('button', { name: /save transaction/i }))
 
-    // Success message shown
-    expect(screen.getByText(/transaction saved/i)).toBeInTheDocument()
+    // Promise toast fired
+    expect(sileo.promise).toHaveBeenCalledWith(
+      expect.any(Promise),
+      expect.objectContaining({
+        success: expect.objectContaining({ title: 'Transaction saved' }),
+      }),
+    )
     // Form is reset
     expect(screen.getByPlaceholderText('0.00')).toHaveValue('')
     // Mutation was called
-    expect(mockMutate).toHaveBeenCalledOnce()
+    expect(mockMutateAsync).toHaveBeenCalledOnce()
   })
 
   // F1-AC4: transaction nature defaults to expense
@@ -149,7 +165,7 @@ describe('CaptureForm', () => {
     await user.click(screen.getByText('Food'))
     await user.click(screen.getByRole('button', { name: /save transaction/i }))
 
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({
         nature: 'expense',
         account_id: 'a1',
@@ -171,7 +187,7 @@ describe('CaptureForm', () => {
     await user.click(screen.getByRole('button', { name: /save transaction/i }))
 
     const today = new Date().toISOString().split('T')[0]
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({ date: today }),
     )
   })
@@ -189,7 +205,7 @@ describe('CaptureForm', () => {
     await user.type(screen.getByPlaceholderText('0.00'), '10')
     await user.click(screen.getByText('Food'))
     await user.click(screen.getByRole('button', { name: /save transaction/i }))
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({ currency: 'EUR' }),
     )
   })
@@ -231,7 +247,7 @@ describe('CaptureForm', () => {
     await user.click(screen.getByRole('button', { name: /save transaction/i }))
 
     // First call should have tag_ids
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({ tag_ids: ['t1'] }),
     )
 

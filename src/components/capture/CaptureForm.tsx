@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sileo } from 'sileo'
 import { useSettings } from '@/context/SettingsContext'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories } from '@/hooks/useCategories'
@@ -42,7 +43,6 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const [description, setDescription] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [suggestionPicked, setSuggestionPicked] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
 
   // Pre-select lastUsedAccountId when accounts load
   useEffect(() => {
@@ -131,17 +131,13 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
 
     updateSettings({ lastUsedAccountId: selectedAccountId })
     resetForm()
-    setShowSuccess(true)
 
-    createTransaction.mutate(input)
+    sileo.promise(createTransaction.mutateAsync(input), {
+      loading: { title: t('common.loading') },
+      success: { title: t('capture.success') },
+      error: { title: t('common.error'), duration: 5000 },
+    }).catch(() => {})
   }
-
-  // Auto-hide success message
-  useEffect(() => {
-    if (!showSuccess) return
-    const timer = setTimeout(() => setShowSuccess(false), 2000)
-    return () => clearTimeout(timer)
-  }, [showSuccess])
 
   return (
     <div className="flex flex-col gap-6">
@@ -203,12 +199,6 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
           />
         )}
       </div>
-
-      {showSuccess && (
-        <p className="text-center text-sm font-medium text-green-600">
-          {t('capture.success')}
-        </p>
-      )}
 
       <Button
         size="lg"

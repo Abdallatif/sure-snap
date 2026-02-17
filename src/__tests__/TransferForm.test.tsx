@@ -5,13 +5,22 @@ import { TransferForm } from '../components/capture/TransferForm'
 import { createWrapper } from './helpers'
 import type { AccountDetail } from '../types'
 
+vi.mock('sileo', () => ({
+  sileo: {
+    success: vi.fn(),
+    error: vi.fn(),
+    warning: vi.fn(),
+    promise: vi.fn((p: Promise<unknown>) => p),
+  },
+}))
+
 const mockAccounts: AccountDetail[] = [
   { id: 'a1', name: 'Cash', balance: '100', currency: 'USD', classification: 'asset', account_type: 'depository' },
   { id: 'a2', name: 'Bank', balance: '500', currency: 'USD', classification: 'asset', account_type: 'depository' },
   { id: 'a3', name: 'Euro Wallet', balance: '300', currency: 'EUR', classification: 'asset', account_type: 'depository' },
 ]
 
-const mockMutate = vi.fn()
+const mockMutateAsync = vi.fn(() => Promise.resolve())
 
 vi.mock('@/hooks/useAccounts', () => ({
   useAccounts: () => ({ data: mockAccounts }),
@@ -19,7 +28,7 @@ vi.mock('@/hooks/useAccounts', () => ({
 
 vi.mock('@/hooks/useCreateTransfer', () => ({
   useCreateTransfer: () => ({
-    mutate: mockMutate,
+    mutateAsync: mockMutateAsync,
     isPending: false,
   }),
   PartialTransferError: class PartialTransferError extends Error {
@@ -40,7 +49,7 @@ const defaultSettings = {
 }
 
 beforeEach(() => {
-  mockMutate.mockClear()
+  mockMutateAsync.mockClear()
 })
 
 /** The submit button — not the toggle which also matches "Transfer" */
@@ -116,8 +125,8 @@ describe('TransferForm', () => {
     await user.type(screen.getByPlaceholderText('0.00'), '50')
     await user.click(getSubmitButton())
 
-    expect(mockMutate).toHaveBeenCalledOnce()
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledOnce()
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({
         sourceAccountId: 'a1',
         sourceAccountName: 'Cash',
@@ -126,7 +135,6 @@ describe('TransferForm', () => {
         amount: 50,
         sourceCurrency: 'USD',
       }),
-      expect.any(Object),
     )
   })
 
@@ -200,14 +208,13 @@ describe('TransferForm', () => {
     await user.type(screen.getByLabelText('Destination amount'), '92')
     await user.click(getSubmitButton())
 
-    expect(mockMutate).toHaveBeenCalledWith(
+    expect(mockMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({
         amount: 100,
         sourceCurrency: 'USD',
         destinationAmount: 92,
         destinationCurrency: 'EUR',
       }),
-      expect.any(Object),
     )
   })
 
