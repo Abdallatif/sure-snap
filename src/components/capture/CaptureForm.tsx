@@ -57,6 +57,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const [note, setNote] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [suggestionPicked, setSuggestionPicked] = useState(false)
+  const [accountClickedByUser, setAccountClickedByUser] = useState(false)
 
   // Pre-select lastUsedAccountId when accounts load
   useEffect(() => {
@@ -90,6 +91,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
     setNote('')
     setSelectedTagIds([])
     setSuggestionPicked(false)
+    setAccountClickedByUser(false)
   }, [])
 
   function handleTagToggle(tagId: string) {
@@ -166,7 +168,10 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
         accounts={accounts}
         enabledAccountIds={enabledAccountIds}
         selectedAccountId={selectedAccountId}
-        onSelect={setSelectedAccountId}
+        onSelect={(id) => {
+          setSelectedAccountId(id)
+          setAccountClickedByUser(true)
+        }}
       />
 
       <AmountInput
@@ -208,7 +213,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
         {!suggestionPicked && (
           <SuggestionChips
             transactions={transactions}
-            accountId={selectedAccountId}
+            accountId={accountClickedByUser ? selectedAccountId : null}
             categoryId={selectedCategoryId}
             description={description}
             onSelect={handleSuggestionSelect}

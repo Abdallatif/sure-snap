@@ -230,6 +230,57 @@ describe('CaptureForm', () => {
     expect(screen.getByText('Urgent')).toBeInTheDocument()
   })
 
+  describe('suggestion account filtering', () => {
+    beforeEach(() => {
+      mockTransactions.length = 0
+      mockTransactions.push(
+        {
+          id: 'tx1', date: '2025-01-01', amount: '5.00', currency: 'USD',
+          name: 'Coffee', notes: null, classification: 'expense',
+          account: { id: 'a1', name: 'Cash', account_type: 'depository' },
+          category: { id: 'c1', name: 'Food', classification: 'expense', color: '', icon: '' },
+          merchant: null, tags: [], transfer: null,
+          created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z',
+        },
+        {
+          id: 'tx2', date: '2025-01-02', amount: '30.00', currency: 'EUR',
+          name: 'Gas', notes: null, classification: 'expense',
+          account: { id: 'a2', name: 'Bank', account_type: 'depository' },
+          category: { id: 'c2', name: 'Transport', classification: 'expense', color: '', icon: '' },
+          merchant: null, tags: [], transfer: null,
+          created_at: '2025-01-02T00:00:00Z', updated_at: '2025-01-02T00:00:00Z',
+        },
+      )
+    })
+
+    afterEach(() => {
+      mockTransactions.length = 0
+    })
+
+    it('shows suggestions from all accounts when account is auto-selected', () => {
+      render(<CaptureForm onToggleTransfer={() => {}} />, {
+        wrapper: createWrapper({
+          settings: { ...defaultSettings, lastUsedAccountId: 'a1' },
+        }),
+      })
+      // Auto-selected a1, but suggestions should not be filtered
+      expect(screen.getByText('Coffee')).toBeInTheDocument()
+      expect(screen.getByText('Gas')).toBeInTheDocument()
+    })
+
+    it('filters suggestions by account after user clicks an account', async () => {
+      const user = userEvent.setup()
+      render(<CaptureForm onToggleTransfer={() => {}} />, {
+        wrapper: createWrapper({ settings: defaultSettings }),
+      })
+      // Explicitly click Bank (a2)
+      await user.click(screen.getByText('Bank'))
+      // Only a2 suggestions should remain
+      expect(screen.getByText('Gas')).toBeInTheDocument()
+      expect(screen.queryByText('Coffee')).not.toBeInTheDocument()
+    })
+  })
+
   // F9-AC9: tags cleared on form reset
   it('clears tags on submit', async () => {
     const user = userEvent.setup()
