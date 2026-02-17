@@ -19,6 +19,7 @@ export interface Settings {
   showTags: boolean
   showNotes: boolean
   sortCategoriesByUsage: boolean
+  transactionsPerPage: number
 }
 
 interface SettingsContextValue extends Settings {
@@ -38,6 +39,7 @@ const defaultSettings: Settings = {
   showTags: false,
   showNotes: false,
   sortCategoriesByUsage: true,
+  transactionsPerPage: 100,
 }
 
 function loadSettings(): Settings {

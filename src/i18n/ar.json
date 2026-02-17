@@ -39,6 +39,8 @@
   "settings.showNotes": "إظهار الملاحظات",
   "settings.showTags": "إظهار الوسوم",
   "settings.sortCategoriesByUsage": "ترتيب الفئات حسب الاستخدام",
+  "settings.transactionsPerPage": "عدد المعاملات المحمّلة",
+  "settings.transactionsPerPageHint": "المعاملات الأخيرة المحمّلة من Sure. القيم الأعلى تحسّن اقتراحات ترتيب الفئات لكن قد تبطئ التحميل.",
   "settings.language": "اللغة",
   "settings.themeLight": "الوضع الفاتح",
   "settings.themeDark": "الوضع الداكن",
