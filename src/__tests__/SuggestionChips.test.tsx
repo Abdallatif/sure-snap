@@ -148,6 +148,35 @@ describe('SuggestionChips', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
+  it('boosts suggestions matching selected tags', () => {
+    // Gas has 1 occurrence with tag "t1", Coffee has 3 occurrences without tags.
+    // Without tags, Coffee (3x) ranks above Gas (1x).
+    // With tagIds=["t1"], Gas gets weight 2 (total 2) but Coffee still wins (3).
+    // So we use 2 Gas transactions with the tag to get weighted count 4 > 3.
+    const taggedTx = [
+      makeTx({ name: 'Coffee' }),
+      makeTx({ name: 'Coffee' }),
+      makeTx({ name: 'Coffee' }),
+      makeTx({ name: 'Gas', tags: [{ id: 't1', name: 'Fuel' }] }),
+      makeTx({ name: 'Gas', tags: [{ id: 't1', name: 'Fuel' }] }),
+    ]
+    render(
+      <SuggestionChips
+        transactions={taggedTx}
+        accountId={null}
+        categoryId={null}
+        description=""
+        tagIds={['t1']}
+        onSelect={() => {}}
+      />,
+      { wrapper: createWrapper() },
+    )
+    const buttons = screen.getAllByRole('button')
+    // Gas: 2 × weight 2 = 4, Coffee: 3 × weight 1 = 3
+    expect(buttons[0]).toHaveTextContent('Gas')
+    expect(buttons[1]).toHaveTextContent('Coffee')
+  })
+
   // F4-AC1: derived from cached transactions, no extra API call
   it('renders nothing when transactions list is empty', () => {
     render(

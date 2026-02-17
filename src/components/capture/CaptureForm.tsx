@@ -216,6 +216,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
             accountId={accountClickedByUser ? selectedAccountId : null}
             categoryId={selectedCategoryId}
             description={description}
+            tagIds={selectedTagIds}
             onSelect={handleSuggestionSelect}
           />
         )}

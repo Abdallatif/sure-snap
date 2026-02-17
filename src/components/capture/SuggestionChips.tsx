@@ -13,6 +13,7 @@ interface SuggestionChipsProps {
   accountId: string | null
   categoryId: string | null
   description: string
+  tagIds?: string[]
   onSelect: (suggestion: Suggestion) => void
 }
 
@@ -21,6 +22,7 @@ export function SuggestionChips({
   accountId,
   categoryId,
   description,
+  tagIds = [],
   onSelect,
 }: SuggestionChipsProps) {
   const suggestions = useMemo(() => {
@@ -41,15 +43,18 @@ export function SuggestionChips({
       )
     }
 
-    // Group by name, track frequency and most recent transaction
+    // Group by name, track weighted frequency and most recent transaction.
+    // Transactions sharing a tag with the selected tags get weight 2, others 1.
+    const tagSet = new Set(tagIds)
     const groups = new Map<string, { count: number; transaction: Transaction }>()
     for (const tx of filtered) {
       if (!tx.name) continue
+      const weight = tagSet.size > 0 && tx.tags.some((t) => tagSet.has(t.id)) ? 2 : 1
       const existing = groups.get(tx.name)
       if (!existing) {
-        groups.set(tx.name, { count: 1, transaction: tx })
+        groups.set(tx.name, { count: weight, transaction: tx })
       } else {
-        existing.count++
+        existing.count += weight
       }
     }
 
@@ -57,7 +62,7 @@ export function SuggestionChips({
       .sort((a, b) => b[1].count - a[1].count)
       .slice(0, 5)
       .map(([name, { transaction }]): Suggestion => ({ name, transaction }))
-  }, [transactions, accountId, categoryId, description])
+  }, [transactions, accountId, categoryId, description, tagIds])
 
   if (suggestions.length === 0) return null
 
