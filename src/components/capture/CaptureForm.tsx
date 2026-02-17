@@ -22,7 +22,7 @@ interface CaptureFormProps {
 
 export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const { t } = useTranslation()
-  const { enabledAccountIds, lastUsedAccountId, currencies, showTags, sortCategoriesByUsage, updateSettings } =
+  const { enabledAccountIds, lastUsedAccountId, currencies, showTags, showNotes, sortCategoriesByUsage, updateSettings } =
     useSettings()
 
   const { data: accounts = [] } = useAccounts()
@@ -54,6 +54,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   )
   const [selectedCategoryName, setSelectedCategoryName] = useState('')
   const [description, setDescription] = useState('')
+  const [note, setNote] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [suggestionPicked, setSuggestionPicked] = useState(false)
 
@@ -86,6 +87,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
     setSelectedCategoryId(null)
     setSelectedCategoryName('')
     setDescription('')
+    setNote('')
     setSelectedTagIds([])
     setSuggestionPicked(false)
   }, [])
@@ -138,6 +140,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
       name: description || selectedCategoryName,
       nature: 'expense' as const,
       category_id: selectedCategoryId,
+      notes: note || undefined,
       currency: selectedCurrency || undefined,
       tag_ids: selectedTagIds.length > 0 ? selectedTagIds : undefined,
     }
@@ -212,6 +215,13 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
           />
         )}
       </div>
+
+      {showNotes && (
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">{t('capture.note')}</label>
+          <DescriptionInput value={note} onChange={setNote} placeholder={t('capture.notePlaceholder')} />
+        </div>
+      )}
 
       <Button
         size="lg"

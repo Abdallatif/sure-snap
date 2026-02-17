@@ -67,12 +67,19 @@ describe('TransferForm', () => {
     expect(screen.getByText('To')).toBeInTheDocument()
   })
 
-  it('renders amount input and note field', () => {
+  it('renders amount input and note field when showNotes is enabled', () => {
     render(<TransferForm onToggleTransfer={() => {}} />, {
-      wrapper: createWrapper({ settings: defaultSettings }),
+      wrapper: createWrapper({ settings: { ...defaultSettings, showNotes: true } }),
     })
     expect(screen.getByPlaceholderText('0.00')).toBeInTheDocument()
     expect(screen.getByText('Note')).toBeInTheDocument()
+  })
+
+  it('hides note field by default', () => {
+    render(<TransferForm onToggleTransfer={() => {}} />, {
+      wrapper: createWrapper({ settings: defaultSettings }),
+    })
+    expect(screen.queryByText('Note')).not.toBeInTheDocument()
   })
 
   it('renders transfer submit button', () => {

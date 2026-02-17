@@ -17,6 +17,7 @@ export interface Settings {
   lastUsedAccountId: string | null
   currencies: string[]
   showTags: boolean
+  showNotes: boolean
   sortCategoriesByUsage: boolean
 }
 
@@ -35,6 +36,7 @@ const defaultSettings: Settings = {
   lastUsedAccountId: null,
   currencies: ['USD', 'EUR', 'ILS'],
   showTags: false,
+  showNotes: false,
   sortCategoriesByUsage: true,
 }
 

@@ -17,7 +17,7 @@ interface TransferFormProps {
 
 export function TransferForm({ onToggleTransfer }: TransferFormProps) {
   const { t } = useTranslation()
-  const { enabledAccountIds, lastUsedAccountId, updateSettings } = useSettings()
+  const { enabledAccountIds, lastUsedAccountId, showNotes, updateSettings } = useSettings()
   const { data: accounts = [] } = useAccounts()
   const transfer = useCreateTransfer()
 
@@ -175,10 +175,12 @@ export function TransferForm({ onToggleTransfer }: TransferFormProps) {
         />
       )}
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">{t('capture.note')}</label>
-        <DescriptionInput value={description} onChange={setDescription} />
-      </div>
+      {showNotes && (
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">{t('capture.note')}</label>
+          <DescriptionInput value={description} onChange={setDescription} placeholder={t('capture.notePlaceholder')} />
+        </div>
+      )}
 
       <Button
         size="lg"
