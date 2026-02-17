@@ -36,6 +36,7 @@
   "settings.currencies": "Currencies",
   "settings.currencyPlaceholder": "Search currencies…",
   "settings.showTags": "Show tags",
+  "settings.sortCategoriesByUsage": "Sort categories by usage",
   "settings.language": "Language",
   "settings.themeLight": "Light mode",
   "settings.themeDark": "Dark mode",

@@ -9,7 +9,7 @@ import { useSettings } from '@/context/SettingsContext'
 
 export function SettingsSheet() {
   const { t } = useTranslation()
-  const { currencies, showTags, updateSettings } = useSettings()
+  const { currencies, showTags, sortCategoriesByUsage, updateSettings } = useSettings()
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-4">
@@ -30,6 +30,15 @@ export function SettingsSheet() {
           id="show-tags"
           checked={showTags}
           onCheckedChange={(checked) => updateSettings({ showTags: checked })}
+        />
+      </section>
+
+      <section className="flex items-center justify-between">
+        <Label htmlFor="sort-categories">{t('settings.sortCategoriesByUsage')}</Label>
+        <Switch
+          id="sort-categories"
+          checked={sortCategoriesByUsage}
+          onCheckedChange={(checked) => updateSettings({ sortCategoriesByUsage: checked })}
         />
       </section>
 

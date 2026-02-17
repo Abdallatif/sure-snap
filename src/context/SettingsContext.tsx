@@ -17,6 +17,7 @@ export interface Settings {
   lastUsedAccountId: string | null
   currencies: string[]
   showTags: boolean
+  sortCategoriesByUsage: boolean
 }
 
 interface SettingsContextValue extends Settings {
@@ -34,6 +35,7 @@ const defaultSettings: Settings = {
   lastUsedAccountId: null,
   currencies: ['USD', 'EUR', 'ILS'],
   showTags: false,
+  sortCategoriesByUsage: true,
 }
 
 function loadSettings(): Settings {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { sileo } from 'sileo'
 import { useSettings } from '@/context/SettingsContext'
@@ -22,7 +22,7 @@ interface CaptureFormProps {
 
 export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const { t } = useTranslation()
-  const { enabledAccountIds, lastUsedAccountId, currencies, showTags, updateSettings } =
+  const { enabledAccountIds, lastUsedAccountId, currencies, showTags, sortCategoriesByUsage, updateSettings } =
     useSettings()
 
   const { data: accounts = [] } = useAccounts()
@@ -30,6 +30,19 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
   const { data: transactions = [] } = useTransactions()
   const { data: tags = [] } = useTags()
   const createTransaction = useCreateTransaction()
+
+  const sortedCategories = useMemo(() => {
+    if (!sortCategoriesByUsage || transactions.length === 0) return categories
+    const freq = new Map<string, number>()
+    for (const tx of transactions) {
+      if (tx.category) {
+        freq.set(tx.category.id, (freq.get(tx.category.id) ?? 0) + 1)
+      }
+    }
+    return [...categories].sort(
+      (a, b) => (freq.get(b.id) ?? 0) - (freq.get(a.id) ?? 0),
+    )
+  }, [categories, transactions, sortCategoriesByUsage])
 
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     lastUsedAccountId,
@@ -164,7 +177,7 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">{t('capture.category')}</label>
         <CategoryPicker
-          categories={categories}
+          categories={sortedCategories}
           selectedCategoryId={selectedCategoryId}
           onSelect={(id, name) => {
             setSelectedCategoryId(id)
