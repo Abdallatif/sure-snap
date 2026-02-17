@@ -20,6 +20,8 @@ export interface Settings {
   showNotes: boolean
   sortCategoriesByUsage: boolean
   transactionsPerPage: number
+  accountIconsView: boolean
+  accountIcons: Record<string, string>
 }
 
 interface SettingsContextValue extends Settings {
@@ -40,6 +42,8 @@ const defaultSettings: Settings = {
   showNotes: false,
   sortCategoriesByUsage: true,
   transactionsPerPage: 100,
+  accountIconsView: false,
+  accountIcons: {},
 }
 
 function loadSettings(): Settings {

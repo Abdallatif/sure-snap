@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { LucideIcon } from '../LucideIcon'
 import { cn } from '@/lib/utils'
+import { useSettings } from '@/context/SettingsContext'
+import { getAccountIcon } from '@/lib/accountIcons'
 import type { AccountDetail } from '@/types'
 
 interface AccountSelectorProps {
@@ -19,6 +23,7 @@ export function AccountSelector({
   onSelect,
 }: AccountSelectorProps) {
   const { t } = useTranslation()
+  const { accountIconsView, accountIcons } = useSettings()
 
   const enabledAccounts = accounts.filter((a) =>
     enabledAccountIds.includes(a.id),
@@ -29,6 +34,38 @@ export function AccountSelector({
       <p className="text-sm text-muted-foreground">
         {t('capture.noAccounts')}
       </p>
+    )
+  }
+
+  if (accountIconsView) {
+    return (
+      <div className="flex justify-center gap-2 overflow-x-auto pb-2">
+        {enabledAccounts.map((account) => {
+          const isSelected = account.id === selectedAccountId
+          const isDisabled = account.id === disabledAccountId
+          return (
+            <Button
+              key={account.id}
+              variant="outline"
+              disabled={isDisabled}
+              onClick={() => onSelect(account.id)}
+              className={cn(
+                'relative size-12 shrink-0 rounded-full p-0',
+                isSelected && 'border-primary bg-accent dark:border-primary',
+                isDisabled && 'opacity-40',
+              )}
+            >
+              <LucideIcon
+                name={getAccountIcon(account, accountIcons)}
+                className="size-6"
+              />
+              <Badge variant="secondary" className={cn("absolute -bottom-1.5 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 border-input text-[10px] px-1.5 py-0", isSelected && "border-primary dark:border-primary")}>
+                {account.currency}
+              </Badge>
+            </Button>
+          )
+        })}
+      </div>
     )
   }
 

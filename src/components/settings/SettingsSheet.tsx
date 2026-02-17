@@ -11,13 +11,22 @@ import { useSettings } from '@/context/SettingsContext'
 
 export function SettingsSheet() {
   const { t } = useTranslation()
-  const { currencies, showTags, showNotes, sortCategoriesByUsage, transactionsPerPage, updateSettings } = useSettings()
+  const { currencies, showTags, showNotes, sortCategoriesByUsage, transactionsPerPage, accountIconsView, updateSettings } = useSettings()
   const [perPageDraft, setPerPageDraft] = useState(String(transactionsPerPage))
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-4">
       <ConnectionSettings />
       <AccountsSettings />
+
+      <section className="flex items-center justify-between">
+        <Label htmlFor="account-icons-view">{t('settings.accountIconsView')}</Label>
+        <Switch
+          id="account-icons-view"
+          checked={accountIconsView}
+          onCheckedChange={(checked) => updateSettings({ accountIconsView: checked })}
+        />
+      </section>
 
       <section className="flex flex-col gap-3">
         <Label>{t('settings.currencies')}</Label>

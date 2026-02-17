@@ -41,6 +41,8 @@
   "settings.sortCategoriesByUsage": "Sort categories by usage",
   "settings.transactionsPerPage": "Transactions to load",
   "settings.transactionsPerPageHint": "Recent transactions fetched from Sure. Higher values improve category sorting suggestions but may load slower.",
+  "settings.accountIconsView": "Account icons view",
+  "settings.accountIcon": "Icon",
   "settings.language": "Language",
   "settings.themeLight": "Light mode",
   "settings.themeDark": "Dark mode",

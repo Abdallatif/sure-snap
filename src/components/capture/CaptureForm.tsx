@@ -159,20 +159,21 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <AccountsHeader
-        transferMode={false}
-        onToggleTransfer={onToggleTransfer}
-      />
-
-      <AccountSelector
-        accounts={accounts}
-        enabledAccountIds={enabledAccountIds}
-        selectedAccountId={selectedAccountId}
-        onSelect={(id) => {
-          setSelectedAccountId(id)
-          setAccountClickedByUser(true)
-        }}
-      />
+      <div className="flex flex-col gap-1">
+        <AccountsHeader
+          transferMode={false}
+          onToggleTransfer={onToggleTransfer}
+        />
+        <AccountSelector
+          accounts={accounts}
+          enabledAccountIds={enabledAccountIds}
+          selectedAccountId={selectedAccountId}
+          onSelect={(id) => {
+            setSelectedAccountId(id)
+            setAccountClickedByUser(true)
+          }}
+        />
+      </div>
 
       <AmountInput
         value={amount}
