@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { onlineManager } from '@tanstack/react-query'
 import { sileo } from 'sileo'
 import { useSettings } from '@/context/SettingsContext'
 import { useAccounts } from '@/hooks/useAccounts'
@@ -150,11 +151,23 @@ export function CaptureForm({ onToggleTransfer }: CaptureFormProps) {
     updateSettings({ lastUsedAccountId: selectedAccountId })
     resetForm()
 
-    sileo.promise(createTransaction.mutateAsync(input), {
-      loading: { title: t('common.loading') },
-      success: { title: t('capture.success') },
-      error: { title: t('common.error'), duration: 5000 },
-    }).catch(() => {})
+    if (onlineManager.isOnline()) {
+      sileo.promise(createTransaction.mutateAsync(input), {
+        loading: { title: t('common.loading') },
+        success: {
+          title: t('capture.success'),
+          description: t('capture.successDescription', {
+            amount: input.amount,
+            currency: input.currency ?? selectedCurrency,
+            name: input.name,
+            account: selectedAccount?.name,
+          }),
+        },
+        error: { title: t('common.error'), duration: 5000 },
+      }).catch(() => {})
+    } else {
+      createTransaction.mutate(input)
+    }
   }
 
   return (

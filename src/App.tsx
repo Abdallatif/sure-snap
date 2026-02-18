@@ -54,13 +54,13 @@ function App() {
 
       <Toaster
         position="top-center"
-        offset={{ top: 16 }}
+        offset={{ top: 8 }}
         options={{
           duration: 3000,
-          fill: isDark ? '#171717' : '#FFFFFF',
-          styles: isDark
+          fill: !isDark ? '#171717' : '#FFFFFF',
+          styles: !isDark
             ? { title: '!text-gray-100', description: '!text-gray-400' }
-            : undefined,
+            : { description: '!text-gray-500' },
         }}
       />
     </div>

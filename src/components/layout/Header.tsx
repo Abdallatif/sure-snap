@@ -22,10 +22,12 @@ export function Header({ onOpenSettings }: HeaderProps) {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const status = useConnectionStatus()
-  const pendingCount = useMutationState({
+  const pendingMutations = useMutationState({
     filters: { status: 'pending' },
-    select: (mutation) => mutation.state.status,
-  }).length
+    select: (mutation) => mutation.state.isPaused,
+  })
+  const pendingCount = pendingMutations.length
+  const allPaused = pendingCount > 0 && pendingMutations.every(Boolean)
 
   return (
     <header className="flex items-center justify-between border-b px-4 py-3">
@@ -43,7 +45,7 @@ export function Header({ onOpenSettings }: HeaderProps) {
             {t('common.serverUnreachable')}
           </Badge>
         )}
-        {pendingCount > 0 && (
+        {allPaused && (
           <Badge variant="outline" className="gap-1 text-xs text-blue-600">
             <Loader2 className="size-3 animate-spin" />
             {pendingCount}

@@ -22,6 +22,11 @@ export function seedSettings(overrides: Partial<Settings> = {}) {
     lastUsedAccountId: null,
     currencies: ['USD', 'EUR', 'ILS'],
     showTags: false,
+    showNotes: false,
+    sortCategoriesByUsage: true,
+    transactionsPerPage: 100,
+    accountIconsView: false,
+    accountIcons: {},
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...defaults, ...overrides }))
 }

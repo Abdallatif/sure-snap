@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { onlineManager } from '@tanstack/react-query'
 import { sileo } from 'sileo'
 import { ArrowRight } from 'lucide-react'
 import { useSettings } from '@/context/SettingsContext'
@@ -93,16 +94,29 @@ export function TransferForm({ onToggleTransfer }: TransferFormProps) {
       description: description || undefined,
     }
 
-    sileo.promise(transfer.mutateAsync(input), {
-      loading: { title: t('common.loading') },
-      success: { title: t('capture.transferSuccess') },
-      error: (err) => {
-        if (err instanceof PartialTransferError) {
-          return { title: t('capture.transferPartialError'), duration: null }
-        }
-        return { title: t('capture.transferError'), duration: 5000 }
-      },
-    }).then(() => resetForm()).catch(() => {})
+    if (onlineManager.isOnline()) {
+      sileo.promise(transfer.mutateAsync(input), {
+        loading: { title: t('common.loading') },
+        success: {
+          title: t('capture.transferSuccess'),
+          description: t('capture.transferSuccessDescription', {
+            amount: input.amount,
+            currency: input.sourceCurrency,
+            from: input.sourceAccountName,
+            to: input.destinationAccountName,
+          }),
+        },
+        error: (err) => {
+          if (err instanceof PartialTransferError) {
+            return { title: t('capture.transferPartialError'), duration: null }
+          }
+          return { title: t('capture.transferError'), duration: 5000 }
+        },
+      }).then(() => resetForm()).catch(() => {})
+    } else {
+      transfer.mutate(input)
+      resetForm()
+    }
   }
 
   return (
