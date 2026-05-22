@@ -70,15 +70,39 @@ export function getCategories(
   return request<CategoryCollection>(config, `/api/v1/categories?${search}`)
 }
 
-export function getTransactions(
+export async function getTransactions(
   config: ApiClientConfig,
   params?: { per_page?: number },
-) {
-  const perPage = params?.per_page ?? 100
-  return request<TransactionCollection>(
+): Promise<TransactionCollection> {
+  const API_MAX_PER_PAGE = 100
+  const desired = params?.per_page ?? API_MAX_PER_PAGE
+  const pageSize = Math.min(desired, API_MAX_PER_PAGE)
+
+  const first = await request<TransactionCollection>(
     config,
-    `/api/v1/transactions?per_page=${perPage}`,
+    `/api/v1/transactions?per_page=${pageSize}`,
   )
+
+  if (desired <= 100 || first.transactions.length < pageSize) {
+    return first
+  }
+
+  const allTransactions = [...first.transactions]
+  let page = 2
+  while (allTransactions.length < desired) {
+    const next = await request<TransactionCollection>(
+      config,
+      `/api/v1/transactions?per_page=${pageSize}&page=${page}`,
+    )
+    if (next.transactions.length === 0) break
+    allTransactions.push(...next.transactions)
+    page++
+  }
+
+  return {
+    transactions: allTransactions.slice(0, desired),
+    pagination: first.pagination,
+  }
 }
 
 export function getTags(config: ApiClientConfig) {
