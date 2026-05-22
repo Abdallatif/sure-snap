@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { History } from 'lucide-react'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Switch } from '../ui/switch'
+import { Button } from '../ui/button'
 import { AccountsSettings } from './AccountsSettings'
 import { ConnectionSettings } from './ConnectionSettings'
 import { CurrencyPicker } from './CurrencyPicker'
 import { LanguageSettings } from './LanguageSettings'
 import { useSettings } from '@/context/SettingsContext'
 
-export function SettingsSheet() {
+interface SettingsSheetProps {
+  onNavigate: (page: 'history') => void
+}
+
+export function SettingsSheet({ onNavigate }: SettingsSheetProps) {
   const { t } = useTranslation()
   const { currencies, showTags, showNotes, sortCategoriesByUsage, transactionsPerPage, accountIconsView, updateSettings } = useSettings()
   const [perPageDraft, setPerPageDraft] = useState(String(transactionsPerPage))
@@ -85,6 +91,17 @@ export function SettingsSheet() {
       </section>
 
       <LanguageSettings />
+
+      <section>
+        <Button
+          variant="outline"
+          className="w-full gap-2"
+          onClick={() => onNavigate('history')}
+        >
+          <History className="size-4" />
+          {t('history.title')}
+        </Button>
+      </section>
     </div>
   )
 }

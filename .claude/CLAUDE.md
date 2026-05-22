@@ -1,5 +1,3 @@
-# CLAUDE.md
-
 ## Project Overview
 
 SureSnap is a PWA companion app for [Sure](https://github.com/we-promise/sure) that enables quick transaction capture with offline support.

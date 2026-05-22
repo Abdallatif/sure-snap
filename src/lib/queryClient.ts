@@ -1,8 +1,10 @@
 import { QueryClient } from '@tanstack/react-query'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { get, set, del } from 'idb-keyval'
-import { createTransaction } from '@/api/client'
+import { createTransaction, ApiRequestError } from '@/api/client'
 import { getApiConfig } from './onlineManager'
+import { addEntry, addAttempt, updateAttempt } from './transactionHistory'
+import type { TransactionAttempt, TransactionHistoryEntry } from './transactionHistory'
 import type {
   CreateTransactionInput,
   Tag,
@@ -54,10 +56,43 @@ function resolveTagIds(tagIds: string[] | undefined): Tag[] {
 // the useMutation hook.
 
 queryClient.setMutationDefaults(['transactions', 'create'], {
-  mutationFn: (input: CreateTransactionInput) => {
+  mutationFn: async (input: CreateTransactionInput) => {
     const config = getApiConfig()
     if (!config) throw new Error('API not configured')
-    return createTransaction(config, input)
+
+    const txId = (input as CreateTransactionInput & { _historyId?: string })._historyId
+      ?? `tx-${Date.now()}`
+    const attemptId = `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+
+    const attempt: TransactionAttempt = {
+      id: attemptId,
+      timestamp: Date.now(),
+      status: 'pending',
+      requestBody: { transaction: input },
+    }
+
+    await addAttempt(txId, attempt)
+
+    try {
+      const result = await createTransaction(config, input)
+      await updateAttempt(txId, attemptId, {
+        status: 'success',
+        responseStatus: 200,
+        responseBody: result,
+      })
+      return result
+    } catch (err) {
+      const status = err instanceof ApiRequestError ? err.status : undefined
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      const responseBody = err instanceof ApiRequestError ? err.body : undefined
+      await updateAttempt(txId, attemptId, {
+        status: 'error',
+        responseStatus: status,
+        responseBody,
+        errorMessage,
+      })
+      throw err
+    }
   },
   scope: { id: 'create-transaction' },
   retry: 3,
@@ -67,6 +102,17 @@ queryClient.setMutationDefaults(['transactions', 'create'], {
 
     const previous =
       queryClient.getQueryData<TransactionCollection>(['transactions'])
+
+    const historyId = `tx-${Date.now()}`
+    ;(input as CreateTransactionInput & { _historyId?: string })._historyId = historyId
+
+    const entry: TransactionHistoryEntry = {
+      transactionId: historyId,
+      label: input.name || 'Transaction',
+      createdAt: Date.now(),
+      attempts: [],
+    }
+    await addEntry(entry)
 
     queryClient.setQueryData<TransactionCollection>(['transactions'], (old) => {
       if (!old) return old

@@ -61,5 +61,18 @@
   "common.offline": "Offline",
   "common.serverUnreachable": "Server unreachable",
   "common.pendingSync": "Pending sync",
-  "common.loading": "Loading…"
+  "common.loading": "Loading…",
+
+  "history.title": "Transaction History",
+  "history.empty": "No transactions recorded yet.",
+  "history.refresh": "Refresh",
+  "history.clear": "Clear history",
+  "history.attempts": "attempt(s)",
+  "history.request": "Request",
+  "history.response": "Response",
+  "history.copyRequest": "Copy request",
+  "history.copyResponse": "Copy response",
+  "history.resend": "Resend",
+  "history.copied": "Copied to clipboard",
+  "history.resent": "Request resent"
 }

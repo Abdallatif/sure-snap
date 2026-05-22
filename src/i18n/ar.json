@@ -61,5 +61,18 @@
   "common.offline": "غير متصل",
   "common.serverUnreachable": "الخادم غير متاح",
   "common.pendingSync": "بانتظار المزامنة",
-  "common.loading": "جارٍ التحميل…"
+  "common.loading": "جارٍ التحميل…",
+
+  "history.title": "سجل المعاملات",
+  "history.empty": "لا توجد معاملات مسجّلة بعد.",
+  "history.refresh": "تحديث",
+  "history.clear": "مسح السجل",
+  "history.attempts": "محاولة/محاولات",
+  "history.request": "الطلب",
+  "history.response": "الاستجابة",
+  "history.copyRequest": "نسخ الطلب",
+  "history.copyResponse": "نسخ الاستجابة",
+  "history.resend": "إعادة الإرسال",
+  "history.copied": "تم النسخ",
+  "history.resent": "تم إعادة الإرسال"
 }
