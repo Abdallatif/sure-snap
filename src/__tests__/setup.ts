@@ -21,3 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 })
+
+// Build-time constant injected by vite.config.ts — not available in the
+// vitest environment which uses its own config, so provide a test stand-in.
+;(globalThis as Record<string, unknown>).__APP_VERSION__ = '0.0.0-test'

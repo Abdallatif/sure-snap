@@ -49,6 +49,7 @@
   "settings.themeLight": "Light mode",
   "settings.themeDark": "Dark mode",
   "settings.themeSystem": "System mode",
+  "settings.version": "v{{version}}",
 
   "setup.message": "Connect to your Sure instance to start capturing transactions.",
   "setup.configure": "Open Settings",

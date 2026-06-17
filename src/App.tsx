@@ -67,7 +67,7 @@ function App() {
       )}
 
       <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent side="right">
+        <SheetContent side="right" onOpenAutoFocus={(e) => e.preventDefault()}>
           <SheetHeader>
             <SheetTitle>{t('settings.title')}</SheetTitle>
           </SheetHeader>

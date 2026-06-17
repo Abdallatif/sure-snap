@@ -372,3 +372,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility token-masked {
+  -webkit-text-security: disc;
+}

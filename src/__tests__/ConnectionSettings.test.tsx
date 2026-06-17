@@ -36,7 +36,7 @@ describe('ConnectionSettings', () => {
       }),
     })
     const tokenInput = screen.getByLabelText(/api token/i)
-    expect(tokenInput).toHaveAttribute('type', 'password')
+    expect(tokenInput).toHaveClass('token-masked')
   })
 
   // F5-AC10: show/hide toggle for token
@@ -48,15 +48,15 @@ describe('ConnectionSettings', () => {
       }),
     })
     const tokenInput = screen.getByLabelText(/api token/i)
-    expect(tokenInput).toHaveAttribute('type', 'password')
+    expect(tokenInput).toHaveClass('token-masked')
 
     // Click show button
     await user.click(screen.getByRole('button', { name: /show/i }))
-    expect(tokenInput).toHaveAttribute('type', 'text')
+    expect(tokenInput).not.toHaveClass('token-masked')
 
     // Click hide button
     await user.click(screen.getByRole('button', { name: /hide/i }))
-    expect(tokenInput).toHaveAttribute('type', 'password')
+    expect(tokenInput).toHaveClass('token-masked')
   })
 
   // F5-AC3: test connection button

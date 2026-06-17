@@ -50,14 +50,18 @@ export function ConnectionSettings() {
         <div className="relative">
           <Input
             id="api-token"
-            type={showToken ? 'text' : 'password'}
+            type="text"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             placeholder={t('settings.apiTokenPlaceholder')}
             value={apiToken}
             onChange={(e) => {
               updateSettings({ apiToken: e.target.value })
               setTestResult(null)
             }}
-            className="pe-16"
+            className={`pe-16${showToken ? '' : ' token-masked'}`}
           />
           <Button
             type="button"

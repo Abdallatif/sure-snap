@@ -102,6 +102,10 @@ export function SettingsSheet({ onNavigate }: SettingsSheetProps) {
           {t('history.title')}
         </Button>
       </section>
+
+      <p className="pb-2 text-center text-xs text-muted-foreground">
+        {t('settings.version', { version: __APP_VERSION__ })}
+      </p>
     </div>
   )
 }

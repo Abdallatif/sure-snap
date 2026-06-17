@@ -49,6 +49,7 @@
   "settings.themeLight": "الوضع الفاتح",
   "settings.themeDark": "الوضع الداكن",
   "settings.themeSystem": "وضع النظام",
+  "settings.version": "v{{version}}",
 
   "setup.message": "اتصل بخادم Sure لبدء تسجيل المعاملات.",
   "setup.configure": "فتح الإعدادات",
