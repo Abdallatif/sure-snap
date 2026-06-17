@@ -26,7 +26,19 @@ createRoot(document.getElementById('root')!).render(
           },
         }}
         onSuccess={() => {
-          queryClient.resumePausedMutations().then(() => {
+          // Resume all pending mutations after persistence restore.
+          // resumePausedMutations() only handles isPaused=true, but mutations
+          // that were mid-execution when the PWA was killed by iOS are persisted
+          // as {status:'pending', isPaused:false}. Without restarting those,
+          // they block the scope queue forever ("zombie" mutations).
+          const pending = queryClient.getMutationCache().getAll().filter(
+            (m) => m.state.status === 'pending',
+          )
+          pending.reduce(
+            (promise, mutation) =>
+              promise.then(() => mutation.continue().catch(() => {})),
+            Promise.resolve() as Promise<unknown>,
+          ).then(() => {
             queryClient.invalidateQueries()
           })
         }}
